@@ -9,6 +9,7 @@
     :root {
       --deep: #05203c;
       --blue: #0570de;
+      --red: #ff3b3b;
       --card: rgba(255, 255, 255, 0.82);
       --text: #12324a;
       --muted: #6a7d8f;
@@ -243,11 +244,30 @@
       flex-direction: column;
     }
 
-    .card-back img {
+    .image-wrap {
+      position: relative;
+      height: 255px;
+    }
+
+    .image-wrap img {
       width: 100%;
-      height: 215px;
+      height: 100%;
       object-fit: cover;
       display: block;
+    }
+
+    .image-overlay {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 46px 18px 18px;
+      background: linear-gradient(180deg, transparent, rgba(5, 32, 60, 0.84));
+      color: white;
+    }
+
+    .image-overlay h3 {
+      margin: 0;
+      font-size: 27px;
+      letter-spacing: -0.8px;
     }
 
     .match {
@@ -281,64 +301,87 @@
     }
 
     .destination-body {
-      padding: 22px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       flex: 1;
-    }
-
-    .destination-body h3 {
-      margin: 0;
-      font-size: 25px;
-      color: var(--deep);
-      letter-spacing: -0.7px;
-    }
-
-    .destination-body p {
-      margin: 0;
-      color: #557086;
-      line-height: 1.45;
     }
 
     .feelings {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: auto;
+      gap: 7px;
+      margin-top: 0;
     }
 
     .feelings span {
       background: #f3f7fb;
-      padding: 7px 9px;
+      padding: 6px 8px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: #557086;
     }
+    .landmarks {
+  background: #f8fbff;
+  border: 1px solid rgba(5, 32, 60, 0.08);
+  border-radius: 18px;
+  padding: 10px 12px;
+}
+
+.landmarks strong {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #075ea8;
+  margin-bottom: 5px;
+}
+
+.landmarks p {
+  margin: 0;
+  color: #39586f;
+  font-size: 13px;
+  line-height: 1.35;
+}
 
     .card-actions {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap: 8px;
       margin-top: auto;
-      padding-top: 16px;
+      padding-top: 14px;
     }
 
     .card-link,
-    .ghost-button {
+    .ghost-button,
+    .journey-button {
       border: 0;
       border-radius: 999px;
-      padding: 12px 15px;
       font-weight: 800;
-      font-size: 14px;
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
       white-space: nowrap;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .front-action .card-link {
+      width: 100%;
+      padding: 13px 18px;
+      font-size: 14px;
+    }
+
+    .back-actions .card-link,
+    .back-actions .ghost-button,
+    .back-actions .journey-button {
+      flex: 1;
+      min-width: 0;
+      padding: 9px 6px;
+      font-size: 11px;
+      box-shadow: none;
     }
 
     .card-link {
@@ -350,6 +393,20 @@
     .ghost-button {
       background: #eef6ff;
       color: #075ea8;
+    }
+
+    .journey-button {
+      background: var(--red);
+      color: white;
+    }
+
+    .journey-button:hover {
+      box-shadow: 0 12px 26px rgba(255, 59, 59, 0.3);
+    }
+
+    .card-actions button:hover,
+    .card-actions a:hover {
+      transform: translateY(-2px);
     }
 
     .explore-more-wrap {
@@ -411,7 +468,7 @@
       min-height: 64px;
       padding: 0 36px;
       border-radius: 999px;
-      background: #ff3b3b;
+      background: var(--red);
       color: white;
       text-decoration: none;
       font-weight: 900;
@@ -472,6 +529,10 @@
         font-size: 20px;
       }
 
+      .image-wrap {
+        height: 240px;
+      }
+
       .explore-more-wrap {
         padding: 36px 22px;
       }
@@ -508,7 +569,7 @@
             placeholder="Example: I want quiet mornings, sea air, small streets, golden sunsets, and the feeling that time is moving slower..."
           ></textarea>
 
-          <button id="dreamButton">Find my feeling</button>
+          <button id="dreamButton" onclick="showResults()">Find my feeling</button>
         </div>
       </div>
     </section>
@@ -577,82 +638,123 @@
       document.body.style.setProperty('--mood-c', mood.colors[2]);
     }
 
-    async function showResults() {
-      updateMoodBackground();
+async function showResults() {
+  updateMoodBackground();
 
-      cards.innerHTML = `<p>Loading stories...</p>`;
-      results.style.display = 'block';
+  const userText = input.value.trim();
 
-      try {
-        const response = await fetch("http://127.0.0.1:8000/stories-preview");
-        const destinations = await response.json();
+  if (!userText) {
+    cards.innerHTML = `<p>Please describe what you want to feel first.</p>`;
+    results.style.display = 'block';
+    return;
+  }
 
-        const visibleDestinations = destinations.slice(0, 6);
+  cards.innerHTML = `<p>Finding places that match your feeling...</p>`;
+  results.style.display = 'block';
 
-        cards.innerHTML = visibleDestinations.map((place, index) => `
-          <article class="destination-card" id="card-${index}">
-            <div class="card-inner">
-              <div class="card-face card-front">
-                <div>
-                  <div class="match">${place.match || "Feeling match"}</div>
-                  <div class="story-title">Traveller feeling</div>
-                  <p class="quote">“${place.story || ""}”</p>
-                </div>
+  console.log("Request sent to backend with text:", userText);
+  try {
+    const response = await fetch("http://127.0.0.1:8001/recommend", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        text: userText
+      })
+    });
+ console.log("Request sent to backend with text:", userText);
 
-                <div class="card-actions">
-                  <button class="card-link" onclick="flipCard(${index})">
-                    Discover destination
-                  </button>
-                </div>
-              </div>
+    const data = await response.json();
 
-              <div class="card-face card-back">
-                <img src="${place.image}" alt="${place.name}">
+    const destinations = data.results || [];
 
-                <div class="destination-body">
-                  <div>
-                    <h3>${place.name || "Unknown place"}</h3>
-                    <p>${place.from || ""}</p>
-                  </div>
+    if (destinations.length === 0) {
+      cards.innerHTML = `<p>No matching places found. Try describing another feeling.</p>`;
+      return;
+    }
 
-                  <div class="feelings">
-                    ${(place.feelings || []).map(feeling => `<span>${feeling}</span>`).join('')}
-                  </div>
+    const visibleDestinations = destinations.slice(0, 6);
 
-                  <div class="card-actions">
-                    <button class="ghost-button" onclick="flipCard(${index})">
-                      Back to story
-                    </button>
-                    <a class="card-link" href="${place.flightUrl || "https://www.skyscanner.net"}" target="_blank" rel="noopener">
-                      How to get there
-                    </a>
-                  </div>
-                </div>
+    cards.innerHTML = visibleDestinations.map((place, index) => `
+      <article class="destination-card" id="card-${index}">
+        <div class="card-inner">
+
+          <div class="card-face card-front">
+            <div>
+              <div class="match">${place.match || "Feeling match"}</div>
+              <div class="story-title">Traveller feeling</div>
+              <p class="quote">“${place.story || ""}”</p>
+            </div>
+
+            <div class="card-actions front-action">
+              <button class="card-link" onclick="flipCard(${index})">
+                Discover destination
+              </button>
+            </div>
+          </div>
+
+          <div class="card-face card-back">
+            <div class="image-wrap">
+              <img src="${place.image}" alt="${place.name}">
+              <div class="image-overlay">
+                <h3>${place.name || "Unknown place"}</h3>
               </div>
             </div>
-          </article>
-        `).join('') + `
-          <div class="explore-more-wrap">
-            <h2 class="explore-more-title">Explore more than a destination.</h2>
-            <p class="explore-more-text">
-              Open more traveller stories, hidden moods and emotional routes that match the way you want your next trip to feel.
-            </p>
-            <a class="explore-more-button" href="stories.html">
-              Explore more stories →
-            </a>
+
+            <div class="destination-body">
+              <div class="feelings">
+                ${(place.feelings || []).slice(0, 4).map(feeling => `<span>${feeling}</span>`).join('')}
+              </div>
+              
+                <div class="landmarks">
+  <strong>Landmarks</strong>
+  <p>${(place.landmarks || []).slice(0, 3).join(', ')}</p>
+</div>
+
+              <div class="card-actions back-actions">
+                <button class="ghost-button" onclick="flipCard(${index})">Back</button>
+
+                <button class="journey-button" onclick="openJourney('${encodeURIComponent(place.name || "Unknown place")}')">
+                  Journey
+                </button>
+
+                <a class="card-link" href="${place.flightUrl || "https://www.skyscanner.net"}" target="_blank" rel="noopener">
+                  Flights
+                </a>
+              </div>
+            </div>
           </div>
-        `;
 
-        results.scrollIntoView({ behavior: 'smooth' });
+        </div>
+      </article>
+    `).join('') + `
+      <div class="explore-more-wrap">
+        <h2 class="explore-more-title">Explore more than a destination.</h2>
+        <p class="explore-more-text">
+          Open more traveller stories, hidden moods and emotional routes that match the way you want your next trip to feel.
+        </p>
+        <a class="explore-more-button" href="stories.html">
+          Explore more stories →
+        </a>
+      </div>
+    `;
 
-      } catch (error) {
-        cards.innerHTML = `<p>Could not load stories from backend.</p>`;
-        console.error(error);
-      }
-    }
+    results.scrollIntoView({ behavior: 'smooth' });
+
+  } catch (error) {
+    cards.innerHTML = `<p>Could not get recommendations from backend.</p>`;
+    console.error(error);
+  }
+}
 
     function flipCard(index) {
       document.getElementById(`card-${index}`).classList.toggle('is-flipped');
+    }
+
+    function openJourney(encodedPlaceName) {
+      const placeName = decodeURIComponent(encodedPlaceName);
+      window.location.href = `journey.html?place=${encodeURIComponent(placeName)}`;
     }
 
     input.addEventListener('input', updateMoodBackground);
