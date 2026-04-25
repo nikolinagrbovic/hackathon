@@ -654,7 +654,7 @@ async function showResults() {
 
   console.log("Request sent to backend with text:", userText);
   try {
-    const response = await fetch("http://127.0.0.1:8001/recommend", {
+    const response = await fetch("http://127.0.0.1:8000/recommend", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

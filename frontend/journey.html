@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feeltrip Journey</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    :root {
+      --deep: #05203c;
+      --blue: #0570de;
+      --red: #ff3b3b;
+      --text: #12324a;
+      --muted: #6a7d8f;
+      --card: rgba(255,255,255,0.9);
+      --shadow: 0 24px 80px rgba(5,32,60,0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, #d9efff, transparent 34%),
+        radial-gradient(circle at 82% 18%, #fff2c8, transparent 32%),
+        linear-gradient(135deg, #eaf7ff, #fff 62%);
+      min-height: 100vh;
+    }
+
+    .nav {
+      height: 72px;
+      padding: 0 7vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--deep);
+      color: white;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.8px;
+    }
+
+    .logo span { color: #00b2ff; }
+
+    .nav a {
+      color: white;
+      text-decoration: none;
+      background: rgba(255,255,255,0.1);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .page {
+      padding: 42px 7vw 90px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 28px;
+      align-items: stretch;
+      margin-bottom: 34px;
+    }
+
+    .intro {
+      background: var(--card);
+      border-radius: 34px;
+      padding: 36px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      background: #e6f4ff;
+      color: #075ea8;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 22px 0 16px;
+      color: var(--deep);
+      font-size: clamp(42px, 5vw, 70px);
+      letter-spacing: -2.8px;
+      line-height: 0.95;
+    }
+
+    .lead {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.65;
+      color: #39586f;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .chips span {
+      background: #f3f7fb;
+      color: #557086;
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .map-card {
+      position: relative;
+      min-height: 500px;
+      border-radius: 34px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: white;
+    }
+
+    #map {
+      height: 100%;
+      min-height: 500px;
+      width: 100%;
+    }
+
+    .map-panel {
+      position: absolute;
+      z-index: 999;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(18px);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 18px 50px rgba(5,32,60,0.16);
+    }
+
+    .map-panel h3 {
+      margin: 0 0 8px;
+      color: var(--deep);
+      font-size: 24px;
+      letter-spacing: -0.7px;
+    }
+
+    .map-panel p {
+      margin: 0;
+      color: #39586f;
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .section-title {
+      margin: 36px 0 20px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      color: var(--deep);
+      font-size: 38px;
+      letter-spacing: -1.4px;
+    }
+
+    .section-title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    .plan {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .plan-card {
+      background: var(--card);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 18px 58px rgba(5,32,60,0.10);
+      border: 1px solid rgba(5,32,60,0.08);
+    }
+
+    .plan-card strong {
+      display: block;
+      color: #075ea8;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .plan-card h3 {
+      margin: 0 0 10px;
+      color: var(--deep);
+      font-size: 24px;
+      letter-spacing: -0.6px;
+    }
+
+    .plan-card p {
+      margin: 0;
+      color: #39586f;
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .stops {
+      display: grid;
+      gap: 14px;
+    }
+
+    .stop {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 14px;
+      background: var(--card);
+      padding: 18px;
+      border-radius: 24px;
+      box-shadow: 0 14px 42px rgba(5,32,60,0.08);
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .stop:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 60px rgba(5,32,60,0.12);
+    }
+
+    .stop-num {
+      height: 52px;
+      border-radius: 17px;
+      background: var(--blue);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .stop h3 {
+      margin: 0 0 5px;
+      color: var(--deep);
+      font-size: 21px;
+      letter-spacing: -0.4px;
+    }
+
+    .stop p {
+      margin: 0;
+      color: #557086;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 56px;
+      padding: 0 24px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 900;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 16px 34px rgba(5,112,222,0.24);
+    }
+
+    .danger {
+      background: var(--red);
+      color: white;
+      box-shadow: 0 16px 34px rgba(255,59,59,0.24);
+    }
+
+    .soft {
+      background: #eef6ff;
+      color: #075ea8;
+    }
+
+    @media (max-width: 1000px) {
+      .hero,
+      .plan {
+        grid-template-columns: 1fr;
+      }
+
+      .map-card,
+      #map {
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 28px 20px 70px;
+      }
+
+      .intro {
+        padding: 26px;
+      }
+
+      .nav {
+        padding: 0 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="logo">feel<span>trip</span></div>
+    <a href="index.html">Back to search</a>
+  </nav>
+
+  <main class="page" id="app">
+    <p>Loading journey...</p>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:8000";
+    const params = new URLSearchParams(window.location.search);
+    const placeName = params.get("place");
+    const app = document.getElementById("app");
+
+    let map;
+    let markers = [];
+
+    function cityFromPlaceParam(value) {
+      if (!value) return "";
+      return decodeURIComponent(value).split(",")[0].trim();
+    }
+
+    function validCoords(coords) {
+      return (
+        Array.isArray(coords) &&
+        coords.length === 2 &&
+        typeof coords[0] === "number" &&
+        typeof coords[1] === "number"
+      );
+    }
+
+    function fakeCoordinatesAround(center, count) {
+      const [lat, lng] = center;
+
+      return Array.from({ length: count }, (_, i) => {
+        const angle = (i / Math.max(count, 1)) * Math.PI * 2;
+        const radius = 0.012 + i * 0.002;
+
+        return [
+          lat + Math.cos(angle) * radius,
+          lng + Math.sin(angle) * radius
+        ];
+      });
+    }
+
+    function getLandmarkCoords(place, landmarks, center) {
+      const landmarkCoordinatesMap =
+        place.landmarkCoordinates ||
+        place.landmark_coordinates ||
+        {};
+
+      const fallbackCoords = fakeCoordinatesAround(center, landmarks.length);
+
+      return landmarks.map((landmark, index) => {
+        const realCoords = landmarkCoordinatesMap[landmark];
+
+        if (validCoords(realCoords)) {
+          return realCoords;
+        }
+
+        return fallbackCoords[index];
+      });
+    }
+
+    function stopDescription(place, landmark, index) {
+      const mood = place.mood || "travel";
+      const pace = place.pace || "balanced";
+      const sensory = (place.sensory || []).slice(0, 3).join(", ");
+
+      const templates = [
+        `Start here and let the first impression set the route. Notice ${sensory || "the light and air"} before moving on.`,
+        `Walk slowly around this stop. This is where the ${mood} side of ${place.city} becomes easier to feel.`,
+        `Pause here for a few minutes. Look for small textures, sounds and details instead of rushing to the next photo.`,
+        `This stop gives the journey its rhythm. Keep the ${pace} pace and let the city unfold naturally.`,
+        `End here with a wider view of the place. This is the part that turns the route into a memory.`
+      ];
+
+      return templates[index % templates.length];
+    }
+
+    function planText(place, type) {
+      const city = place.city;
+      const mood = place.mood || "emotional";
+      const pace = place.pace || "balanced";
+
+      if (type === "morning") {
+        return `Start with the calmest landmark first, while the streets are softer and ${city} is still waking up.`;
+      }
+
+      if (type === "afternoon") {
+        return `Move through the main sights when the energy rises. Keep it ${pace}, with time for food, views and small detours.`;
+      }
+
+      return `End with the most atmospheric stop. Let the ${mood} mood of ${city} carry the final part of the day.`;
+    }
+
+    function escapeText(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function focusStop(index) {
+      const place = window.currentPlace;
+      const landmark = window.currentLandmarks[index];
+      const coords = window.currentCoords[index];
+      const panel = document.getElementById("mapPanel");
+
+      panel.innerHTML = `
+        <h3>${escapeText(landmark)}</h3>
+        <p>${escapeText(stopDescription(place, landmark, index))}</p>
+      `;
+
+      map.flyTo(coords, 15, { duration: 0.7 });
+
+      if (markers[index]) {
+        markers[index].openPopup();
+      }
+    }
+
+    function renderJourney(place) {
+      const landmarks = place.landmarks || [];
+
+      const center = validCoords(place.coordinates)
+        ? place.coordinates
+        : [48.8566, 2.3522];
+
+      const landmarkCoords = getLandmarkCoords(place, landmarks, center);
+
+      app.innerHTML = `
+        <section class="hero">
+          <div class="intro">
+            <div class="eyebrow">Your journey</div>
+            <h1>${escapeText(place.city)}, ${escapeText(place.country)}</h1>
+            <p class="lead">${escapeText(place.story || "A route shaped around the feeling of this destination.")}</p>
+
+            <div class="chips">
+              <span>${escapeText(place.mood || "mood")}</span>
+              <span>${escapeText(place.pace || "pace")}</span>
+              <span>${escapeText(place.climate || "climate")}</span>
+              <span>${escapeText(place.crowd || "crowd")}</span>
+              ${(place.tags || []).slice(0, 4).map(tag => `<span>${escapeText(tag)}</span>`).join("")}
+            </div>
+
+            <div class="actions">
+              <a class="btn primary" href="${escapeText(place.flightUrl)}" target="_blank" rel="noopener">Find flights</a>
+              <a class="btn soft" href="${escapeText(place.hotelUrl || "#")}" target="_blank" rel="noopener">Find hotels</a>
+            </div>
+          </div>
+
+          <div class="map-card">
+            <div id="map"></div>
+            <div class="map-panel" id="mapPanel">
+              <h3>Start your route</h3>
+              <p>Click a pin to reveal the landmark, feeling and suggested moment for this journey.</p>
+            </div>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="section-title">
+            <h2>Landmark stops</h2>
+            <p>Tap any stop to move the map and see the moment behind it.</p>
+          </div>
+
+          <div class="stops">
+            ${landmarks.map((landmark, index) => `
+              <article class="stop" onclick="focusStop(${index})">
+                <div class="stop-num">${index + 1}</div>
+                <div>
+                  <h3>${escapeText(landmark)}</h3>
+                  <p>${escapeText(stopDescription(place, landmark, index))}</p>
+                </div>
+              </article>
+            `).join("")}
+          </div>
+
+          <div class="actions">
+            <a class="btn danger" href="${escapeText(place.flightUrl)}" target="_blank" rel="noopener">Turn this into a trip</a>
+            <a class="btn soft" href="index.html">Back to recommendations</a>
+          </div>
+        </section>
+      `;
+
+      window.currentPlace = place;
+      window.currentLandmarks = landmarks;
+      window.currentCoords = landmarkCoords;
+
+      map = L.map("map").setView(center, 13);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap"
+      }).addTo(map);
+
+      markers = landmarks.map((landmark, index) => {
+        const marker = L.marker(landmarkCoords[index])
+          .addTo(map)
+          .bindPopup(`<strong>${escapeText(landmark)}</strong><br>${escapeText(place.city)}`);
+
+        marker.on("click", () => focusStop(index));
+
+        return marker;
+      });
+
+      if (markers.length > 0) {
+        const group = L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.25));
+      }
+    }
+
+    async function loadJourney() {
+      if (!placeName) {
+        app.innerHTML = "<p>No place selected.</p>";
+        return;
+      }
+
+      const city = cityFromPlaceParam(placeName);
+
+      try {
+        const response = await fetch(`${API_BASE}/journey/${encodeURIComponent(city)}`);
+        const place = await response.json();
+
+        if (place.error) {
+          app.innerHTML = `<p>${escapeText(place.error)}</p>`;
+          return;
+        }
+
+        renderJourney(place);
+      } catch (error) {
+        console.error(error);
+        app.innerHTML = "<p>Could not load journey from backend. Check that FastAPI is running on port 8000.</p>";
+      }
+    }
+
+    loadJourney();
+  </script>
+</body>
+</html>
