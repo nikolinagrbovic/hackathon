@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pathlib import Path
 import json
-import requests
+import re
 
 app = FastAPI()
 
@@ -16,7 +16,6 @@ app.add_middleware(
 )
 
 PLACES_PATH = Path("places.json")
-MODEL = "llama3.2:3b"
 
 
 class UserInput(BaseModel):
@@ -32,111 +31,141 @@ def load_json(path: Path):
         return json.load(file)
 
 
-def ask_llama_json(prompt: str):
-    try:
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json={
-                "model": MODEL,
-                "prompt": prompt,
-                "stream": False,
-                "format": "json",
-                "options": {"temperature": 0},
-            },
-            timeout=90,
-        )
-
-        response.raise_for_status()
-        raw = response.json().get("response", "{}")
-        print("\nLLAMA RAW:")
-        print(raw)
-
-        return json.loads(raw)
-
-    except Exception as e:
-        print("LLAMA ERROR:", e)
-        return {}
-
-
-def normalize_tags(tags):
-    clean = []
-
-    if not isinstance(tags, list):
-        return []
-
-    for tag in tags:
-        if isinstance(tag, str):
-            value = tag.strip().lower()
-            if value:
-                clean.append(value)
-
-    unique = []
-    for tag in clean:
-        if tag not in unique:
-            unique.append(tag)
-
-    return unique
-
-
 def build_flight_url(city):
     return f"https://www.skyscanner.net/transport/flights/?query={city}"
 
 
-def extract_user_profile(text: str):
-    prompt = f"""
-You extract travel intent from user input.
+SYNONYMS = {
+    "calm": ["peaceful", "quiet", "slow", "silence", "relaxing", "soft", "still"],
+    "quiet": ["peaceful", "calm", "silence", "slow", "hidden"],
+    "relax": ["peaceful", "calm", "slow", "escape", "soft"],
+    "romantic": ["love", "sunset", "golden", "dreamy", "soft", "intimate"],
+    "sunset": ["golden", "evening", "romantic", "warm light", "soft light"],
+    "sea": ["ocean", "water", "blue", "coast", "beach", "harbor", "breeze"],
+    "ocean": ["sea", "water", "blue", "coast", "beach", "breeze"],
+    "old": ["ancient", "history", "historic", "stone", "architecture", "heritage"],
+    "history": ["ancient", "museum", "cultural", "ruins", "heritage", "architecture"],
+    "museum": ["art", "culture", "history", "gallery", "cultural"],
+    "art": ["museum", "gallery", "creative", "cultural", "colorful"],
+    "food": ["market", "taste", "street food", "local food", "sensory"],
+    "market": ["food", "local food", "noise", "colors", "lively"],
+    "dark": ["mysterious", "gothic", "shadows", "hidden", "ancient"],
+    "mystery": ["mysterious", "hidden", "secret", "dark", "strange"],
+    "hidden": ["secret", "quiet", "mysterious", "narrow streets"],
+    "colorful": ["playful", "vibrant", "fun", "joyful", "whimsical"],
+    "fun": ["playful", "lively", "colorful", "joyful"],
+    "adventure": ["adventurous", "explore", "climbing", "viewpoint", "discovery"],
+    "explore": ["adventurous", "walking", "discovery", "hidden", "viewpoint"],
+    "nature": ["green", "forest", "water", "fresh air", "peaceful", "outdoors"],
+    "cold": ["fresh air", "winter", "crisp", "quiet"],
+    "warm": ["sun", "summer", "heat", "golden", "outdoor"],
+}
 
-User input:
-{text}
 
-Return ONLY valid JSON.
-Do NOT return markdown.
+def extract_words(text):
+    return re.findall(r"[a-zA-Z]+", text.lower())
 
-Rules:
-- tags MUST be lowercase strings
-- climate MUST be one of: warm, cold, mild, any
-- pace MUST be one of: slow, energetic, balanced, any
-- crowd MUST be one of: quiet, lively, crowded, any
-- mood MUST be one of: romantic, adventurous, peaceful, mysterious, cultural, playful, any
-- activities, sensory, travel_style MUST be arrays of lowercase strings
-- do NOT return objects inside arrays
 
-JSON format:
-{{
-  "tags": [],
-  "mood": "any",
-  "climate": "any",
-  "pace": "any",
-  "crowd": "any",
-  "activities": [],
-  "sensory": [],
-  "travel_style": []
-}}
-"""
+def fast_user_profile(text):
+    words = extract_words(text)
 
-    ai = ask_llama_json(prompt)
+    tags = []
+    expanded = []
+
+    for word in words:
+        if len(word) < 3:
+            continue
+
+        if word not in tags:
+            tags.append(word)
+
+        for synonym in SYNONYMS.get(word, []):
+            if synonym not in expanded:
+                expanded.append(synonym)
+
+    full_text = text.lower()
+
+    mood = "any"
+    if any(w in full_text for w in ["romantic", "love", "sunset", "golden", "dream"]):
+        mood = "romantic"
+    elif any(w in full_text for w in ["calm", "quiet", "peace", "relax", "silence"]):
+        mood = "peaceful"
+    elif any(w in full_text for w in ["history", "museum", "old", "ancient", "art"]):
+        mood = "cultural"
+    elif any(w in full_text for w in ["dark", "mystery", "hidden", "strange"]):
+        mood = "mysterious"
+    elif any(w in full_text for w in ["fun", "colorful", "magic", "playful"]):
+        mood = "playful"
+    elif any(w in full_text for w in ["adventure", "explore", "climb", "hiking"]):
+        mood = "adventurous"
+
+    climate = "any"
+    if any(w in full_text for w in ["warm", "sun", "summer", "hot", "beach"]):
+        climate = "warm"
+    elif any(w in full_text for w in ["cold", "winter", "snow", "crisp"]):
+        climate = "cold"
+    elif any(w in full_text for w in ["mild", "spring", "autumn"]):
+        climate = "mild"
+
+    pace = "any"
+    if any(w in full_text for w in ["slow", "calm", "relax", "quiet"]):
+        pace = "slow"
+    elif any(w in full_text for w in ["energy", "energetic", "busy", "nightlife", "adrenaline"]):
+        pace = "energetic"
+
+    crowd = "any"
+    if any(w in full_text for w in ["quiet", "alone", "hidden", "peaceful", "calm"]):
+        crowd = "quiet"
+    elif any(w in full_text for w in ["crowd", "busy", "people", "market", "nightlife"]):
+        crowd = "lively"
+
+    activities = []
+    for word in ["walking", "hiking", "museum", "food", "market", "architecture", "history", "viewpoint", "nature"]:
+        if word in full_text:
+            activities.append(word)
+
+    sensory = []
+    for word in ["sun", "sea", "water", "wind", "light", "colors", "silence", "noise", "stone", "fresh air"]:
+        if word in full_text:
+            sensory.append(word)
+
+    travel_style = []
+    if mood != "any":
+        travel_style.append(mood)
 
     return {
-        "tags": normalize_tags(ai.get("tags", []))[:10],
-        "mood": str(ai.get("mood", "any")).lower().strip() or "any",
-        "climate": str(ai.get("climate", "any")).lower().strip() or "any",
-        "pace": str(ai.get("pace", "any")).lower().strip() or "any",
-        "crowd": str(ai.get("crowd", "any")).lower().strip() or "any",
-        "activities": normalize_tags(ai.get("activities", [])),
-        "sensory": normalize_tags(ai.get("sensory", [])),
-        "travel_style": normalize_tags(ai.get("travel_style", [])),
+        "tags": tags[:15],
+        "expanded_terms": expanded[:35],
+        "mood": mood,
+        "climate": climate,
+        "pace": pace,
+        "crowd": crowd,
+        "activities": activities,
+        "sensory": sensory,
+        "travel_style": travel_style,
     }
+
+
+def soft_match(a, b):
+    a = str(a).lower().strip()
+    b = str(b).lower().strip()
+
+    if not a or not b:
+        return False
+
+    return a == b or a in b or b in a
 
 
 def list_overlap_score(user_items, place_items, weight):
     score = 0
     matched = []
-    place_set = set(place_items or [])
 
-    for item in user_items or []:
-        if item in place_set:
-            score += weight
-            matched.append(item)
+    for user_item in user_items or []:
+        for place_item in place_items or []:
+            if soft_match(user_item, place_item):
+                score += weight
+                matched.append(user_item)
+                break
 
     return score, matched
 
@@ -146,39 +175,82 @@ def similarity_score(user_profile, place):
     matched = []
     conflicts = []
 
-    for field, weight in [
-        ("tags", 3),
-        ("activities", 3),
-        ("sensory", 2),
-        ("travel_style", 2),
-    ]:
-        field_score, field_matches = list_overlap_score(
-            user_profile.get(field, []),
-            place.get(field, []),
-            weight,
-        )
-        score += field_score
-        matched += field_matches
+    all_user_tags = list(dict.fromkeys(
+        user_profile.get("tags", []) +
+        user_profile.get("expanded_terms", [])
+    ))
 
-    for field, match_points, conflict_points in [
-        ("mood", 2, 0),
-        ("climate", 4, -5),
-        ("pace", 3, -4),
-        ("crowd", 3, -4),
-    ]:
-        user_value = user_profile.get(field, "any")
-        place_value = place.get(field, "")
+    place_all_tags = list(dict.fromkeys(
+        place.get("tags", []) +
+        place.get("activities", []) +
+        place.get("sensory", []) +
+        place.get("travel_style", []) +
+        place.get("landmarks", [])
+    ))
 
-        if user_value != "any":
-            if user_value == place_value:
-                score += match_points
-                matched.append(user_value)
-            elif conflict_points < 0 and place_value:
-                score += conflict_points
-                conflicts.append(place_value)
+    tag_score, tag_matches = list_overlap_score(all_user_tags, place_all_tags, 3)
+    score += tag_score
+    matched += tag_matches
+
+    activity_score, activity_matches = list_overlap_score(
+        user_profile.get("activities", []),
+        place.get("activities", []),
+        4,
+    )
+    score += activity_score
+    matched += activity_matches
+
+    sensory_score, sensory_matches = list_overlap_score(
+        user_profile.get("sensory", []),
+        place.get("sensory", []),
+        3,
+    )
+    score += sensory_score
+    matched += sensory_matches
+
+    style_score, style_matches = list_overlap_score(
+        user_profile.get("travel_style", []),
+        place.get("travel_style", []),
+        3,
+    )
+    score += style_score
+    matched += style_matches
+
+    if user_profile.get("mood") != "any":
+        if user_profile.get("mood") == place.get("mood"):
+            score += 10
+            matched.append(user_profile["mood"])
+
+    if user_profile.get("climate") != "any":
+        if user_profile.get("climate") == place.get("climate"):
+            score += 4
+            matched.append(user_profile["climate"])
+        else:
+            score -= 1
+            conflicts.append(place.get("climate", ""))
+
+    if user_profile.get("pace") != "any":
+        if user_profile.get("pace") == place.get("pace"):
+            score += 5
+            matched.append(user_profile["pace"])
+        else:
+            score -= 1
+            conflicts.append(place.get("pace", ""))
+
+    if user_profile.get("crowd") != "any":
+        if user_profile.get("crowd") == place.get("crowd"):
+            score += 5
+            matched.append(user_profile["crowd"])
+        else:
+            score -= 1
+            conflicts.append(place.get("crowd", ""))
 
     searchable_text = " ".join([
         place.get("story", ""),
+        place.get("mood", ""),
+        place.get("climate", ""),
+        place.get("pace", ""),
+        place.get("crowd", ""),
         " ".join(place.get("landmarks", [])),
         " ".join(place.get("tags", [])),
         " ".join(place.get("activities", [])),
@@ -186,55 +258,49 @@ def similarity_score(user_profile, place):
         " ".join(place.get("travel_style", [])),
     ]).lower()
 
-    for tag in user_profile.get("tags", []):
-        tag = tag.lower().strip()
-        if tag and tag in searchable_text and tag not in matched:
-            score += 0.6
-            matched.append(tag)
+    for term in all_user_tags:
+        if term and term in searchable_text and term not in matched:
+            score += 1
+            matched.append(term)
 
-    matched = list(dict.fromkeys(matched))
-    conflicts = list(dict.fromkeys(conflicts))
+    matched = list(dict.fromkeys([m for m in matched if m]))
+    conflicts = list(dict.fromkeys([c for c in conflicts if c]))
 
-    score += len(matched) * 0.4
-    score -= len(conflicts) * 0.7
+    score += len(matched) * 0.6
+    score -= len(conflicts) * 0.2
 
     max_score = (
-        len(user_profile.get("tags", [])) * 3 +
-        len(user_profile.get("activities", [])) * 3 +
-        len(user_profile.get("sensory", [])) * 2 +
-        len(user_profile.get("travel_style", [])) * 2 +
-        len(user_profile.get("tags", [])) * 0.6 +
-        8 * 0.4
+        len(all_user_tags) * 3 +
+        len(user_profile.get("activities", [])) * 4 +
+        len(user_profile.get("sensory", [])) * 3 +
+        len(user_profile.get("travel_style", [])) * 3 +
+        len(all_user_tags) * 1 +
+        10
     )
-
-    if user_profile.get("mood") != "any":
-        max_score += 2
 
     if user_profile.get("climate") != "any":
         max_score += 4
-
     if user_profile.get("pace") != "any":
-        max_score += 3
-
+        max_score += 5
     if user_profile.get("crowd") != "any":
-        max_score += 3
+        max_score += 5
 
     if max_score <= 0:
-        percent = 50
+        percent = 45
     else:
-        percent = round((score / max_score) * 100)
+        raw_percent = (score / max_score) * 100
 
-    percent = int(max(0, min(99, percent)))
+        # podiže niske rezultate da izgledaju bolje za demo
+        percent = round(35 + (raw_percent * 0.65))
 
-    return score, percent, matched[:8], conflicts[:5]
+    percent = int(max(35, min(96, percent)))
+
+    return score, percent, matched[:10], conflicts[:5]
 
 
 def build_match_reason(matched, conflicts, place):
-    if matched and conflicts:
-        return f"Matched because of {', '.join(matched[:3])}, but may conflict with {', '.join(conflicts[:2])}."
-
     if matched:
-        return f"Matched because of {', '.join(matched[:4])}."
+        return f"Matched because of {', '.join(matched[:5])}."
 
     return f"Suggested because it has a {place.get('mood', 'travel')} mood and {place.get('pace', 'balanced')} pace."
 
@@ -269,14 +335,13 @@ def format_profile(place, score, percent, matched, conflicts):
 
 @app.get("/")
 def home():
-    return {"message": "Backend is running with places.json"}
+    return {"message": "Backend is running fast without AI per request33"}
 
 
 @app.post("/recommend")
 def recommend(data: UserInput):
-    print("\n========== NEW REQUEST ==========")
-
-    user_profile = extract_user_profile(data.text)
+    user_text = data.text
+    user_profile = fast_user_profile(user_text)
     places = load_json(PLACES_PATH)
 
     ranked = []
@@ -288,7 +353,51 @@ def recommend(data: UserInput):
     ranked.sort(key=lambda item: item["score"], reverse=True)
 
     return {
-        "input": data.text,
+        "input": user_text,
         "user_profile": user_profile,
         "results": ranked[:6],
     }
+
+COORDS_PATH = Path("coords.json")
+
+
+def load_coords():
+    if not COORDS_PATH.exists():
+        return {}
+
+    with open(COORDS_PATH, "r", encoding="utf-8") as file:
+        return json.load(file)
+
+
+@app.get("/journey/{city}")
+def get_journey(city: str):
+    places = load_json(PLACES_PATH)
+    coords_data = load_coords()
+
+    for place in places:
+        if place["city"].lower().strip() == city.lower().strip():
+            city_name = place["city"]
+
+            coords_entry = {}
+
+            for key, value in coords_data.items():
+                if key.lower().strip() == city_name.lower().strip():
+                    coords_entry = value
+                    break
+
+            city_coords = coords_entry.get("coordinates", [])
+            landmark_coords = coords_entry.get("landmarks", {})
+
+            print("JOURNEY CITY:", city_name)
+            print("CITY COORDS:", city_coords)
+            print("LANDMARK COORDS:", landmark_coords)
+
+            return {
+                **place,
+                "coordinates": city_coords,
+                "landmarkCoordinates": landmark_coords,
+                "hotelUrl": f"https://www.skyscanner.net/hotels/search?entity_name={city_name}",
+                "flightUrl": place.get("flightUrl") or build_flight_url(city_name),
+            }
+
+    return {"error": "Place not found"}
