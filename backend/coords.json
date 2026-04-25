@@ -1,0 +1,278 @@
+{
+  "Barcelona": {
+    "coordinates": [
+      41.3851,
+      2.1734
+    ],
+    "landmarks": {
+      "Sagrada Familia": [
+        41.3843,
+        2.1719
+      ],
+      "Park Güell": [
+        41.3945,
+        2.1647
+      ],
+      "Casa Batlló": [
+        41.3956,
+        2.1681
+      ],
+      "The Gothic Quarter": [
+        41.3858,
+        2.1734
+      ],
+      "La Boqueria Market": [
+        41.3863,
+        2.1729
+      ]
+    }
+  },
+  "Madrid": {
+    "coordinates": [
+      40.4168,
+      -3.7038
+    ],
+    "landmarks": {
+      "Palacio de Cristal": [
+        40.4168,
+        -3.7038
+      ],
+      "Royal Palace of Madrid": [
+        40.4064,
+        -3.7072
+      ],
+      "Prado Museum": [
+        40.4246,
+        -3.7059
+      ],
+      "Plaza Mayor": [
+        40.3851,
+        -3.7085
+      ],
+      "Puerta del Sol": [
+        40.4168,
+        -3.7038
+      ]
+    }
+  },
+  "Paris": {
+    "coordinates": [
+      48.8566,
+      2.3522
+    ],
+    "landmarks": {
+      "The Eiffel Tower": [
+        48.8583,
+        2.2945
+      ],
+      "The Louvre Museum": [
+        48.8614,
+        2.2945
+      ],
+      "Sacré-Cœur Basilica": [
+        48.8964,
+        2.3358
+      ],
+      "Arc de Triomphe": [
+        48.8567,
+        2.2945
+      ],
+      "Notre-Dame Cathedral": [
+        48.8589,
+        2.3522
+      ]
+    }
+  },
+  "Rome": {
+    "coordinates": [
+      41.8903,
+      12.4927
+    ],
+    "landmarks": {
+      "The Colosseum": [
+        41.8903,
+        12.4927
+      ],
+      "The Pantheon": [
+        41.8941,
+        12.4904
+      ],
+      "Trevi Fountain": [
+        41.9012,
+        12.4649
+      ],
+      "St. Peter’s Basilica": [
+        41.9025,
+        12.4506
+      ],
+      "The Roman Forum": [
+        41.8903,
+        12.4927
+      ]
+    }
+  },
+  "Berlin": {
+    "coordinates": [
+      52.52,
+      13.405
+    ],
+    "landmarks": {
+      "Brandenburg Gate": [
+        52.52,
+        13.405
+      ],
+      "The Reichstag Dome": [
+        52.5203,
+        13.4067
+      ],
+      "Memorial to the Murdered Jews of Europe": [
+        52.5214,
+        13.4069
+      ],
+      "East Side Gallery": [
+        52.5221,
+        13.4072
+      ],
+      "Berlin TV Tower (Fernsehturm)": [
+        52.5235,
+        13.4083
+      ]
+    }
+  },
+  "Athens": {
+    "coordinates": [
+      37.9833,
+      23.7333
+    ],
+    "landmarks": {
+      "The Parthenon": [
+        37.9833,
+        23.7333
+      ],
+      "The Ancient Agora": [
+        37.9833,
+        23.7333
+      ],
+      "Panathenaic Stadium": [
+        37.9833,
+        23.7333
+      ],
+      "Anafiotika": [
+        37.9833,
+        23.7333
+      ],
+      "The Acropolis Museum": [
+        37.9833,
+        23.7333
+      ]
+    }
+  },
+  "Oslo": {
+    "coordinates": [
+      59.91,
+      10.75
+    ],
+    "landmarks": {
+      "Oslo Opera House": [
+        59.9137,
+        10.7548
+      ],
+      "Vigeland Park (Frogner Park)": [
+        59.9163,
+        10.7559
+      ],
+      "The Fram Museum (Polar Ship Fram)": [
+        59.9181,
+        10.7572
+      ],
+      "Oslo City Hall (Rådhuset)": [
+        59.9137,
+        10.7548
+      ],
+      "Akershus Fortress": [
+        59.9114,
+        10.7483
+      ]
+    }
+  },
+  "Lisbon": {
+    "coordinates": [
+      -38.7224,
+      -9.1367
+    ],
+    "landmarks": {
+      "Alfama": [
+        -38.7224,
+        -9.1367
+      ],
+      "Belém Tower": [
+        -38.7168,
+        -9.1413
+      ]
+    }
+  },
+  "Amsterdam": {
+    "coordinates": [
+      52.3702,
+      4.8957
+    ],
+    "landmarks": {
+      "Canal Ring": [
+        52.3739,
+        4.8963
+      ],
+      "Rijksmuseum": [
+        52.3695,
+        4.8946
+      ]
+    }
+  },
+  "Prague": {
+    "coordinates": [
+      50.0879,
+      14.4378
+    ],
+    "landmarks": {
+      "Charles Bridge": [
+        50.0853,
+        14.4364
+      ],
+      "Old Town Square": [
+        50.0875,
+        14.4381
+      ]
+    }
+  },
+  "Vienna": {
+    "coordinates": [
+      48.2081,
+      16.3732
+    ],
+    "landmarks": {
+      "Schönbrunn Palace": [
+        48.2069,
+        16.3753
+      ],
+      "St. Stephen's Cathedral": [
+        48.2078,
+        16.3745
+      ]
+    }
+  },
+  "Dubrovnik": {
+    "coordinates": [
+      42.4168,
+      18.1114
+    ],
+    "landmarks": {
+      "Old City Walls": [
+        42.4168,
+        18.1114
+      ],
+      "Stradun": [
+        42.4168,
+        18.1114
+      ]
+    }
+  }
+}

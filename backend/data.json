@@ -293,4 +293,65 @@
         "landmark": "Holmenkollen Ski Jump",
         "review": "I took a train out of the center and climbed a hill to a structure that looks like a giant silver slide reaching for the clouds. It’s a massive jump used by people who are much braver than me. I stood at the base and looked up the dizzying slope, then went to the observation deck at the top. The view was incredible—nothing but deep blue water and endless green forests. It’s the ultimate symbol of a city that lives for the outdoors."
     }
+    ,
+{
+  "city": "Lisbon",
+  "country": "Portugal",
+  "landmark": "Alfama",
+  "review": "I walked through steep narrow streets where yellow trams rattled past tiled walls and laundry moved softly above my head. The air smelled of grilled fish, salt, and warm stone. At sunset, I heard distant fado music coming from a tiny restaurant, and the whole neighborhood felt nostalgic, romantic, and slow."
+},
+{
+  "city": "Lisbon",
+  "country": "Portugal",
+  "landmark": "Belém Tower",
+  "review": "Standing by the river, I watched the light turn golden over the water. The old stone tower looked like it was guarding stories of sailors, maps, and faraway places. The breeze was soft, the mood was calm, and I felt like I was at the edge of Europe, waiting for an adventure."
+},
+{
+  "city": "Amsterdam",
+  "country": "Netherlands",
+  "landmark": "Canal Ring",
+  "review": "I wandered beside quiet canals while bicycles passed over tiny bridges. The houses leaned slightly over the water, their windows glowing warmly in the evening. It felt peaceful and intimate, like the city was made for slow walking, soft reflections, and getting gently lost."
+},
+{
+  "city": "Amsterdam",
+  "country": "Netherlands",
+  "landmark": "Rijksmuseum",
+  "review": "I stepped inside to escape the cold wind and found myself surrounded by huge paintings, polished floors, and quiet rooms. Outside, the city felt lively, but inside the museum time slowed down. It was cultural, calm, and full of old light."
+},
+{
+  "city": "Prague",
+  "country": "Czech Republic",
+  "landmark": "Charles Bridge",
+  "review": "At dawn, the bridge was almost empty. Mist floated above the river, statues stood like silent guardians, and the castle rose in the distance. The city felt mysterious, old, and magical, as if every stone was hiding a secret."
+},
+{
+  "city": "Prague",
+  "country": "Czech Republic",
+  "landmark": "Old Town Square",
+  "review": "I stood under the astronomical clock while crowds gathered around me. The square was full of music, old towers, warm lights, and the smell of sweet pastries. It felt historic but playful, like a fairy tale that had become a real city."
+},
+{
+  "city": "Vienna",
+  "country": "Austria",
+  "landmark": "Schönbrunn Palace",
+  "review": "I walked through golden rooms and wide gardens where everything felt elegant and carefully arranged. The air was quiet, the paths were clean, and the palace seemed to hold centuries of music, manners, and whispered conversations. It felt graceful, cultural, and calm."
+},
+{
+  "city": "Vienna",
+  "country": "Austria",
+  "landmark": "St. Stephen's Cathedral",
+  "review": "The cathedral rose suddenly above the street with its patterned roof and dark stone walls. Inside, the light was low and sacred, and footsteps echoed under the high ceiling. It felt mysterious, historic, and deeply still despite the busy city outside."
+},
+{
+  "city": "Dubrovnik",
+  "country": "Croatia",
+  "landmark": "Old City Walls",
+  "review": "I climbed the stone walls while the sea flashed bright blue below me. Red rooftops stretched in every direction, and the heat rose from the ancient stones. It felt adventurous and cinematic, like walking above a city built between history and the ocean."
+},
+{
+  "city": "Dubrovnik",
+  "country": "Croatia",
+  "landmark": "Stradun",
+  "review": "In the evening, the marble street glowed under warm lights. People moved slowly between old buildings, music came from open doors, and the sea breeze reached the square. It felt romantic, lively, and timeless."
+}
 ]

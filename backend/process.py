@@ -14,8 +14,15 @@ CITY_IMAGES = {
     "Rome": "https://images.unsplash.com/photo-1529260830199-42c24126f198?auto=format&fit=crop&w=900&q=80",
     "Berlin": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80",
     "Athens": "https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=900&q=80",
-    "Oslo": "https://images.unsplash.com/photo-1605283176560-37dcb61c0cce?auto=format&fit=crop&w=900&q=80",
+    "Oslo": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+    "Lisbon": "https://images.unsplash.com/photo-1585208798174-6cedd86e019a?auto=format&fit=crop&w=900&q=80",
+    "Amsterdam": "https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?auto=format&fit=crop&w=900&q=80",
+    "Prague": "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=80",
+    "Vienna": "https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=900&q=80",
+    "Dubrovnik": "https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?auto=format&fit=crop&w=900&q=80",
 }
+
+FALLBACK_IMAGE = "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"
 
 
 def load_json(path):
@@ -110,12 +117,17 @@ def clean_list(value, limit=None):
     return result
 
 
-def enforce_story(text, max_words=28):
+def enforce_story(text, max_words=60):
     if not isinstance(text, str):
         return ""
 
     words = text.strip().split()
     return " ".join(words[:max_words])
+
+
+def get_city_image(city):
+    normalized_city = city.strip().title()
+    return CITY_IMAGES.get(normalized_city, FALLBACK_IMAGE)
 
 
 def create_place_profile(city_group):
@@ -143,7 +155,11 @@ Important:
 This profile will be used for matching a user's desired feeling with destinations.
 
 Rules:
-- story:whole sentence and max 30 words
+- story MUST be 1–2 complete sentences
+- story MUST be between 35 and 60 words
+- story should feel immersive and descriptive, like a travel moment
+- story should include sensory details such as light, air, sound, texture, smell, or movement
+- story should NOT be a short phrase
 - mood: one of romantic, adventurous, peaceful, mysterious, cultural, playful
 - climate: one of warm, cold, mild
 - pace: one of slow, energetic, balanced
@@ -184,7 +200,7 @@ JSON format:
         "sensory": clean_list(ai.get("sensory", []), 8),
         "travel_style": clean_list(ai.get("travel_style", []), 6),
         "landmarks": landmarks[:5],
-        "image": CITY_IMAGES.get(city, ""),
+        "image": get_city_image(city),
         "flightUrl": f"https://www.skyscanner.net/transport/flights/?query={city}",
     }
 

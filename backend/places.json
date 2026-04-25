@@ -2,7 +2,7 @@
   {
     "city": "Barcelona",
     "country": "Spain",
-    "story": "the air inside was cool and smelled faintly of incense and cut stone",
+    "story": "the air inside was cool and smelled faintly of incense and cut stone. i spent an hour just staring at the ceiling; it felt like being at the bottom of a giant, prehistoric forest where the trees were made of marble.",
     "mood": "romantic",
     "climate": "cool",
     "pace": "slow",
@@ -10,23 +10,19 @@
     "tags": [
       "sagrada familia",
       "incense",
-      "cut stone",
       "marble",
-      "orange light"
+      "forest",
+      "prehistoric",
+      "barcelona"
     ],
-    "activities": [
-      "staring at the ceiling",
-      "looking out over rooftops"
-    ],
+    "activities": [],
     "sensory": [
       "smell",
       "light",
-      "texture"
+      "texture",
+      "air"
     ],
-    "travel_style": [
-      "whimsical",
-      "meditative"
-    ],
+    "travel_style": [],
     "landmarks": [
       "Sagrada Familia",
       "Park Güell",
@@ -40,33 +36,24 @@
   {
     "city": "Madrid",
     "country": "Spain",
-    "story": "I found a palace made of glass and iron, shimmering next to a lake with black swans.",
+    "story": "i wandered into a massive green lung in the center of madrid, where a palace made of glass and iron shimmered next to a lake. walking inside felt like standing in a giant jewel box.",
     "mood": "romantic",
     "climate": "warm",
     "pace": "slow",
     "crowd": "quiet",
     "tags": [
-      "glass",
-      "iron",
-      "lake",
-      "swans",
       "green lung",
+      "glass palace",
+      "lake",
       "jewel box"
     ],
-    "activities": [
-      "walking",
-      "exploring",
-      "relaxing"
-    ],
+    "activities": [],
     "sensory": [
       "light",
-      "silence",
-      "nature"
+      "texture",
+      "air"
     ],
-    "travel_style": [
-      "leisurely",
-      "escapism"
-    ],
+    "travel_style": [],
     "landmarks": [
       "Palacio de Cristal",
       "Royal Palace of Madrid",
@@ -80,27 +67,27 @@
   {
     "city": "Paris",
     "country": "France",
-    "story": "the city below began to look like a toy set as i climbed higher, thousands of golden lights flickered to life all at once",
+    "story": "the wind whistled through the metal beams as i climbed higher. looking through the gaps in the floor, the city below began to look like a toy set. thousands of golden lights suddenly flickered to life all at once, making the entire structure sparkle like a giant diamond.",
     "mood": "romantic",
     "climate": "cold",
-    "pace": "balanced",
+    "pace": "energetic",
     "crowd": "quiet",
     "tags": [
       "eiffel tower",
-      "paris",
       "nighttime",
-      "adventure",
-      "excitement"
+      "golden lights",
+      "adrenaline rush",
+      "parisian romance"
     ],
     "activities": [
       "climbing",
-      "exploring",
-      "taking in views"
+      "exploring"
     ],
     "sensory": [
       "light",
       "sound",
-      "view"
+      "texture",
+      "wind"
     ],
     "travel_style": [
       "adventure",
@@ -119,7 +106,7 @@
   {
     "city": "Rome",
     "country": "Italy",
-    "story": "I stood in the center of a massive, broken oval of stone under a relentless, beating sun, and for a moment, the modern city outside vanished.",
+    "story": "i stood in the center of a massive, broken oval of stone under a relentless, beating sun, and for a moment, the modern city outside vanished. i could almost hear the roar of fifty thousand ghosts.",
     "mood": "romantic",
     "climate": "warm",
     "pace": "slow",
@@ -127,26 +114,24 @@
     "tags": [
       "ancient",
       "history",
-      "stone",
+      "rome",
+      "colosseum",
       "sun",
-      "ghosts"
+      "stone"
     ],
     "activities": [
-      "exploring",
-      "walking",
       "standing",
-      "imagining"
+      "hearing"
     ],
     "sensory": [
-      "heat",
       "light",
       "sound",
-      "air"
+      "heat",
+      "texture"
     ],
     "travel_style": [
-      "independent",
-      "self-guided",
-      "historical"
+      "historical",
+      "solitary"
     ],
     "landmarks": [
       "The Colosseum",
@@ -161,32 +146,31 @@
   {
     "city": "Berlin",
     "country": "Germany",
-    "story": "standing under the arches of a massive sandstone gate, feeling a mix of triumph and heaviness",
+    "story": "standing under the arches of a massive sandstone gate, feeling a mix of triumph and heaviness as wind whipped through the open square",
     "mood": "mysterious",
     "climate": "cold",
     "pace": "slow",
     "crowd": "quiet",
     "tags": [
-      "brandenburg gate",
-      "history",
-      "symbolism",
-      "division",
-      "reunification"
+      "sandstone",
+      "gate",
+      "arches",
+      "wind",
+      "square"
     ],
     "activities": [
-      "visiting museums",
-      "exploring memorials",
-      "walking in parks"
+      "standing",
+      "marveling"
     ],
     "sensory": [
-      "wind",
-      "stone",
-      "arches",
-      "silence"
+      "light",
+      "air",
+      "sound",
+      "texture",
+      "smell"
     ],
     "travel_style": [
       "reflective",
-      "historical",
       "solitary"
     ],
     "landmarks": [
@@ -202,7 +186,7 @@
   {
     "city": "Athens",
     "country": "Greece",
-    "story": "the massive skeleton of a temple that defined Western world architecture",
+    "story": "i stood between the giant fluted columns and looked out at the city stretching all the way to the sea. it felt less like a ruin and more like a giant, sun-bleached ribcage of a god.",
     "mood": "romantic",
     "climate": "warm",
     "pace": "slow",
@@ -213,19 +197,20 @@
       "greek",
       "history",
       "architecture",
+      "sun",
       "marble"
     ],
     "activities": [
       "climbing",
       "exploring",
-      "visiting",
       "admiring"
     ],
     "sensory": [
-      "wind",
-      "sun",
-      "stone",
-      "columns"
+      "light",
+      "air",
+      "sound",
+      "texture",
+      "smell"
     ],
     "travel_style": [
       "hiking",
@@ -245,31 +230,26 @@
   {
     "city": "Oslo",
     "country": "Norway",
-    "story": "I hiked up the sloping white stone as if I were scaling a glacier.",
+    "story": "i walked down to the harbor and saw a building that looked like a massive slab of white marble and glass sliding into the sea. the wind was sharp and fresh.",
     "mood": "romantic",
     "climate": "cold",
     "pace": "slow",
     "crowd": "quiet",
     "tags": [
+      "oslo opera house",
+      "harbor",
       "white marble",
       "glass",
-      "rooftop",
-      "fjord",
-      "architecture"
+      "fresh air"
     ],
-    "activities": [
-      "hiking",
-      "exploring"
-    ],
+    "activities": [],
     "sensory": [
-      "fresh air",
+      "light",
+      "air",
       "wind",
-      "stone"
+      "texture"
     ],
-    "travel_style": [
-      "adventure",
-      "nature"
-    ],
+    "travel_style": [],
     "landmarks": [
       "Oslo Opera House",
       "Vigeland Park (Frogner Park)",
@@ -277,7 +257,212 @@
       "Oslo City Hall (Rådhuset)",
       "Akershus Fortress"
     ],
-    "image": "https://images.unsplash.com/photo-1605283176560-37dcb61c0cce?auto=format&fit=crop&w=900&q=80",
+    "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
     "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Oslo"
+  },
+  {
+    "city": "Lisbon",
+    "country": "Portugal",
+    "story": "i walked through steep narrow streets where yellow trams rattled past tiled walls and laundry moved softly above my head. the air smelled of grilled fish, salt, and warm stone.",
+    "mood": "romantic",
+    "climate": "warm",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "fado music",
+      "narrow streets",
+      "tiled walls",
+      "yellow trams",
+      "grilled fish",
+      "salt",
+      "warm stone"
+    ],
+    "activities": [
+      "exploring neighborhoods",
+      "walking along rivers",
+      "trying local food"
+    ],
+    "sensory": [
+      "smell",
+      "sound",
+      "texture",
+      "light",
+      "air"
+    ],
+    "travel_style": [
+      "self-guided",
+      "relaxed",
+      "local immersion"
+    ],
+    "landmarks": [
+      "Alfama",
+      "Belém Tower"
+    ],
+    "image": "https://images.unsplash.com/photo-1585208798174-6cedd86e019a?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Lisbon"
+  },
+  {
+    "city": "Amsterdam",
+    "country": "Netherlands",
+    "story": "i wandered beside quiet canals while bicycles passed over tiny bridges. the houses leaned slightly over the water, their windows glowing warmly in the evening.",
+    "mood": "romantic",
+    "climate": "cold",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "canal",
+      "bicycle",
+      "bridge",
+      "waterfront",
+      "evening",
+      "warmth",
+      "houses",
+      "windows"
+    ],
+    "activities": [
+      "walking",
+      "exploring",
+      "relaxation",
+      "strolling"
+    ],
+    "sensory": [
+      "light",
+      "air",
+      "sound",
+      "texture",
+      "smell"
+    ],
+    "travel_style": [
+      "leisurely",
+      "slow-paced",
+      "urban"
+    ],
+    "landmarks": [
+      "Canal Ring",
+      "Rijksmuseum"
+    ],
+    "image": "https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Amsterdam"
+  },
+  {
+    "city": "Prague",
+    "country": "Czech Republic",
+    "story": "at dawn, the bridge was almost empty. mist floated above the river, statues stood like silent guardians, and the castle rose in the distance.",
+    "mood": "mysterious",
+    "climate": "cold",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "prague",
+      "charles bridge",
+      "misty morning",
+      "silent statues",
+      "castle view"
+    ],
+    "activities": [
+      "watching the sunrise",
+      "walking along the river"
+    ],
+    "sensory": [
+      "light",
+      "air",
+      "sound",
+      "texture",
+      "smell"
+    ],
+    "travel_style": [
+      "romantic",
+      "relaxing"
+    ],
+    "landmarks": [
+      "Charles Bridge",
+      "Old Town Square"
+    ],
+    "image": "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Prague"
+  },
+  {
+    "city": "Vienna",
+    "country": "Austria",
+    "story": "i walked through golden rooms and wide gardens where everything felt elegant and carefully arranged. the air was quiet, the paths were clean, and the palace seemed to hold centuries of music, manners, and whispered conversations.",
+    "mood": "romantic",
+    "climate": "cold",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "elegant",
+      "garden",
+      "music",
+      "manners",
+      "whispered",
+      "centuries",
+      "golden",
+      "wide",
+      "carefully",
+      "arranged"
+    ],
+    "activities": [
+      "walking",
+      "exploring",
+      "visiting",
+      "admiring"
+    ],
+    "sensory": [
+      "light",
+      "air",
+      "sound",
+      "texture",
+      "smell"
+    ],
+    "travel_style": [
+      "cultural",
+      "luxurious",
+      "historical"
+    ],
+    "landmarks": [
+      "Schönbrunn Palace",
+      "St. Stephen's Cathedral"
+    ],
+    "image": "https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Vienna"
+  },
+  {
+    "city": "Dubrovnik",
+    "country": "Croatia",
+    "story": "climbed the stone walls while the sea flashed bright blue below me. red rooftops stretched in every direction, and the heat rose from the ancient stones.",
+    "mood": "adventurous",
+    "climate": "warm",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "stone walls",
+      "red rooftops",
+      "ancient stones",
+      "ocean view",
+      "history",
+      "cinematic",
+      "adventure"
+    ],
+    "activities": [
+      "climbing",
+      "walking"
+    ],
+    "sensory": [
+      "light",
+      "heat",
+      "sound",
+      "texture",
+      "smell"
+    ],
+    "travel_style": [
+      "hiking",
+      "exploring"
+    ],
+    "landmarks": [
+      "Old City Walls",
+      "Stradun"
+    ],
+    "image": "https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Dubrovnik"
   }
 ]
