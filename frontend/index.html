@@ -1,172 +1,633 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Feeltrip</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: Inter, sans-serif;
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background: linear-gradient(135deg, #eef6ff, #fff4d6);
-  background-size: 200% 200%;
-  animation: move 10s ease infinite;
-  transition: background 0.8s ease;
-}
-
-@keyframes move {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.left {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.container {
-  max-width: 600px;
-  width: 80%;
-}
-
-h1 {
-  font-size: 48px;
-  margin-bottom: 20px;
-  color: #05203c;
-}
-
-textarea {
-  width: 100%;
-  padding: 20px;
-  border-radius: 20px;
-  border: none;
-  font-size: 18px;
-  outline: none;
-  resize: none;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-}
-
-.hint {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #6a7d8f;
-}
-
-button {
-  margin-top: 20px;
-  padding: 14px 24px;
-  border: none;
-  border-radius: 999px;
-  background: #0570de;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-/* RIGHT SIDE FEELING PANEL */
-.right {
-  position: relative;
-  overflow: hidden;
-}
-
-.right::before {
-  content: '';
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(5,112,222,0.25), transparent 70%);
-  top: 10%;
-  left: 20%;
-  filter: blur(80px);
-  animation: float1 12s ease-in-out infinite;
-}
-
-.right::after {
-  content: '';
-  position: absolute;
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(255,211,107,0.25), transparent 70%);
-  bottom: 10%;
-  right: 20%;
-  filter: blur(80px);
-  animation: float2 14s ease-in-out infinite;
-}
-
-@keyframes float1 {
-  0% { transform: translate(0,0); }
-  50% { transform: translate(40px, 30px); }
-  100% { transform: translate(0,0); }
-}
-
-@keyframes float2 {
-  0% { transform: translate(0,0); }
-  50% { transform: translate(-30px, -40px); }
-  100% { transform: translate(0,0); }
-}
-
-@media (max-width: 900px) {
-  body {
-    grid-template-columns: 1fr;
-  }
-  .right {
-    height: 300px;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div class="left">
-  <div class="container">
-    <h1>Tell us what you want to feel</h1>
-    <textarea id="input" placeholder="Quiet mornings, ocean air, slow evenings..."></textarea>
-    <p class="hint">Don’t describe a place. Describe a feeling.</p>
-    <button>Show me how it feels →</button>
-  </div>
-</div>
-
-<div class="right"></div>
-
-<script>
-const input = document.getElementById('input');
-
-const moods = {
-  ocean: { words: ['sea','ocean','beach'], colors: ['#7fc4f2','#4da3d9'] },
-  nature: { words: ['forest','green','mountain'], colors: ['#9fd8b6','#6fbf9f'] },
-  sun: { words: ['sun','warm','sunset'], colors: ['#ffd36b','#f4b942'] },
-  romantic: { words: ['love','slow','dream'], colors: ['#f7a8c4','#e07aa3'] }
-};
-
-input.addEventListener('input', () => {
-  const text = input.value.toLowerCase();
-
-  let colors = [];
-
-  Object.values(moods).forEach(m => {
-    if (m.words.some(w => text.includes(w))) {
-      colors.push(...m.colors);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feeltrip Prototype</title>
+  <style>
+    :root {
+      --sky: #eaf7ff;
+      --deep: #05203c;
+      --blue: #0570de;
+      --soft-blue: #d9efff;
+      --green: #dff7e8;
+      --yellow: #fff2c8;
+      --pink: #ffe6ef;
+      --sand: #fff7ea;
+      --card: rgba(255, 255, 255, 0.82);
+      --text: #12324a;
+      --muted: #6a7d8f;
+      --shadow: 0 24px 80px rgba(5, 32, 60, 0.16);
     }
-  });
 
-  if (colors.length === 0 && text.length > 0) {
-    colors = ['#cfe8ff', '#ffe4b5'];
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  if (!text) {
-    document.body.style.background = 'linear-gradient(135deg, #eef6ff, #fff4d6)';
-  } else {
-    document.body.style.background = `linear-gradient(135deg, ${colors.join(',')})`;
-  }
-});
-</script>
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 12%, var(--mood-a, #d9efff), transparent 34%),
+        radial-gradient(circle at 80% 18%, var(--mood-b, #fff2c8), transparent 32%),
+        linear-gradient(135deg, var(--mood-c, #eaf7ff), #ffffff 62%);
+      min-height: 100vh;
+      transition: background 700ms ease;
+    }
 
+    .nav {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7vw;
+      color: white;
+      background: var(--deep);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+    }
+
+    .logo span {
+      color: #00b2ff;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      font-size: 14px;
+      opacity: 0.92;
+    }
+
+    .hero {
+      padding: 74px 7vw 44px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-weight: 700;
+      color: #1767a8;
+      box-shadow: 0 8px 30px rgba(5, 32, 60, 0.08);
+    }
+
+    h1 {
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: 0.96;
+      letter-spacing: -3px;
+      margin: 22px 0 18px;
+      color: var(--deep);
+    }
+
+    .lead {
+      max-width: 620px;
+      font-size: 19px;
+      line-height: 1.6;
+      color: #39586f;
+      margin-bottom: 28px;
+    }
+
+    .search-card {
+      background: var(--card);
+      backdrop-filter: blur(22px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 30px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      max-width: 780px;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 126px;
+      resize: vertical;
+      border: 0;
+      outline: none;
+      border-radius: 22px;
+      padding: 22px;
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--deep);
+      background: white;
+      box-shadow: inset 0 0 0 1px rgba(5, 32, 60, 0.08);
+    }
+
+    button {
+      border: 0;
+      border-radius: 22px;
+      padding: 0 28px;
+      background: var(--blue);
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 16px 34px rgba(5, 112, 222, 0.27);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 44px rgba(5, 112, 222, 0.34);
+    }
+
+    .mood-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 14px 6px 0;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: #456278;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .visual-card {
+      position: relative;
+      min-height: 470px;
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background:
+        linear-gradient(180deg, rgba(5,32,60,0.02), rgba(5,32,60,0.52)),
+        url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80') center/cover;
+    }
+
+    .floating-story {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(18px);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.14);
+    }
+
+    .story-label {
+      font-size: 13px;
+      color: var(--blue);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+    }
+
+    .floating-story p {
+      font-size: 20px;
+      line-height: 1.45;
+      margin: 0;
+      color: var(--deep);
+      font-weight: 700;
+    }
+
+    .results {
+      padding: 32px 7vw 80px;
+      display: none;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: -1.4px;
+      color: var(--deep);
+    }
+
+    .section-title p {
+      margin: 7px 0 0;
+      color: var(--muted);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+        .destination-card {
+      min-height: 430px;
+      perspective: 1200px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      min-height: 430px;
+      transition: transform 700ms cubic-bezier(.2,.8,.2,1);
+      transform-style: preserve-3d;
+    }
+
+    .destination-card.is-flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(5, 32, 60, 0.1);
+      border: 1px solid rgba(5, 32, 60, 0.06);
+      background: white;
+    }
+
+    .card-front {
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(217, 239, 255, 0.9), transparent 34%),
+        radial-gradient(circle at 84% 28%, rgba(255, 242, 200, 0.8), transparent 34%),
+        #ffffff;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-back img {
+      width: 100%;
+      height: 225px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .match {
+      display: inline-flex;
+      width: fit-content;
+      background: #e6f4ff;
+      color: #075ea8;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .story-title {
+      font-size: 15px;
+      color: #075ea8;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      margin-bottom: 18px;
+    }
+
+    .quote {
+      color: var(--deep);
+      line-height: 1.5;
+      font-size: 23px;
+      letter-spacing: -0.5px;
+      margin: 0;
+      font-weight: 800;
+    }
+
+    .story-note {
+      color: #557086;
+      line-height: 1.5;
+      font-size: 15px;
+      margin-top: 18px;
+    }
+
+    .destination-body {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .destination-body h3 {
+      margin: 0;
+      font-size: 25px;
+      color: var(--deep);
+      letter-spacing: -0.7px;
+    }
+
+    .destination-body p {
+      margin: 0;
+      color: #557086;
+      line-height: 1.45;
+    }
+
+    .feelings {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .feelings span {
+      background: #f3f7fb;
+      padding: 7px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #557086;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: 16px;
+    }
+
+    .card-link,
+    .ghost-button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 15px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .card-link::after {
+      content: '→';
+      font-size: 16px;
+    }
+
+    .ghost-button::before {
+      content: '←';
+      font-size: 16px;
+    }
+
+    .card-link {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 12px 26px rgba(5, 112, 222, 0.22);
+    }
+
+    .ghost-button {
+      background: #eef6ff;
+      color: #075ea8;
+    }
+
+    @media (max-width: 940px) {
+      .hero, .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        height: 58px;
+      }
+
+      .visual-card {
+        min-height: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="logo">feel<span>trip</span></div>
+    <div class="nav-links">
+      <span>Explore</span>
+      <span>Stories</span>
+      <span>Flights</span>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <section>
+      <div class="eyebrow">✨ Search by feeling, not by place</div>
+      <h1>Tell us what your trip should feel like.</h1>
+      <p class="lead">
+        Don’t choose a destination first. Describe the mood, energy, silence, color, memory or dream you want — and we’ll match it with places where people felt something similar.
+      </p>
+
+      <div class="search-card">
+        <div class="input-row">
+          <textarea id="dreamInput" placeholder="Example: I want quiet mornings, sea air, small streets, golden sunsets, and the feeling that time is moving slower..."></textarea>
+          <button id="dreamButton">Find my feeling</button>
+        </div>
+        <div class="mood-strip" id="moodStrip">
+          <span class="chip">calm</span>
+          <span class="chip">ocean</span>
+          <span class="chip">sunset</span>
+          <span class="chip">slow travel</span>
+        </div>
+      </div>
+    </section>
+
+    <aside class="visual-card" id="visualCard">
+      <div class="floating-story">
+        <div class="story-label">From a traveller story</div>
+        <p id="heroStory">“I didn’t remember the list of things I saw. I remembered how soft the evening felt.”</p>
+      </div>
+    </aside>
+  </main>
+
+  <section class="results" id="results">
+    <div class="section-title">
+      <div>
+        <h2>Do you feel this place?</h2>
+        <p>Based on similar traveller stories, not just attractions.</p>
+      </div>
+    </div>
+
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <script>
+    const input = document.getElementById('dreamInput');
+    const button = document.getElementById('dreamButton');
+    const cards = document.getElementById('cards');
+    const results = document.getElementById('results');
+    const moodStrip = document.getElementById('moodStrip');
+    const heroStory = document.getElementById('heroStory');
+    const visualCard = document.getElementById('visualCard');
+
+    const moods = {
+      nature: {
+        words: ['forest', 'mountain', 'nature', 'green', 'trees', 'lake', 'hiking', 'quiet', 'fresh'],
+        colors: ['#dff7e8', '#eaf7ff', '#ffffff'],
+        story: '“The whole day felt green and quiet, like my mind finally had enough space.”',
+        image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80'
+      },
+      ocean: {
+        words: ['sea', 'ocean', 'beach', 'waves', 'blue', 'island', 'swim', 'coast', 'air'],
+        colors: ['#d9efff', '#e8fbff', '#ffffff'],
+        story: '“The sound of the water made everything feel lighter, like I could breathe again.”',
+        image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80'
+      },
+      sun: {
+        words: ['sun', 'sunset', 'golden', 'warm', 'summer', 'light', 'yellow', 'morning'],
+        colors: ['#fff2c8', '#ffe6d2', '#ffffff'],
+        story: '“Every evening looked golden. I felt like I was inside a memory before it even ended.”',
+        image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80'
+      },
+      romantic: {
+        words: ['romantic', 'love', 'slow', 'wine', 'old town', 'streets', 'soft', 'dream'],
+        colors: ['#ffe6ef', '#fff7ea', '#ffffff'],
+        story: '“We walked without a plan, and somehow every corner felt like it was waiting for us.”',
+        image: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=1200&q=80'
+      }
+    };
+
+    const destinations = [
+      {
+        name: 'Madeira, Portugal',
+        from: 'Belgrade → Funchal',
+        match: '92% calm nature match',
+        image: 'https://images.unsplash.com/photo-1513735492246-483525079686?auto=format&fit=crop&w=900&q=80',
+        story: 'The morning started above the clouds. There was no noise, just wind, green cliffs and the strange feeling that your thoughts had finally become quiet.',
+        
+        feelings: ['fresh air', 'wide views', 'peace', 'soft adventure'],
+        flightUrl: 'https://www.skyscanner.net/transport/flights/bel/fnc/'
+      },
+      {
+        name: 'Paros, Greece',
+        from: 'Belgrade → Paros',
+        match: '89% slow ocean match',
+        image: 'https://images.unsplash.com/photo-1601581875309-fafbf2d3ed3a?auto=format&fit=crop&w=900&q=80',
+        story: 'You walk through white streets with salt in your hair. Nobody is rushing. The sea is close enough to hear, and every sunset feels like a small reward.',
+        
+        feelings: ['sea breeze', 'golden light', 'slow days', 'small streets'],
+        flightUrl: 'https://www.skyscanner.net/transport/flights/bel/pas/'
+      },
+      {
+        name: 'Ljubljana, Slovenia',
+        from: 'Belgrade → Ljubljana',
+        match: '84% gentle city match',
+        image: 'https://images.unsplash.com/photo-1558271736-cd043ef2e855?auto=format&fit=crop&w=900&q=80',
+        story: 'The city feels easy from the first walk. Green river, small bridges, quiet cafés. You do not feel like a tourist chasing a list — you feel like you belong for a while.',
+        
+        feelings: ['safe', 'green city', 'easy walks', 'quiet joy'],
+        flightUrl: 'https://www.skyscanner.net/transport/flights/bel/lju/'
+      }
+    ];
+
+    function detectMood(text) {
+      const lower = text.toLowerCase();
+      let best = 'ocean';
+      let bestScore = 0;
+
+      Object.entries(moods).forEach(([key, mood]) => {
+        const score = mood.words.reduce((sum, word) => lower.includes(word) ? sum + 1 : sum, 0);
+        if (score > bestScore) {
+          best = key;
+          bestScore = score;
+        }
+      });
+
+      return moods[best];
+    }
+
+    function updateMood() {
+      const mood = detectMood(input.value);
+      document.body.style.setProperty('--mood-a', mood.colors[0]);
+      document.body.style.setProperty('--mood-b', mood.colors[1]);
+      document.body.style.setProperty('--mood-c', mood.colors[2]);
+      heroStory.textContent = mood.story;
+      visualCard.style.backgroundImage = `linear-gradient(180deg, rgba(5,32,60,0.02), rgba(5,32,60,0.52)), url('${mood.image}')`;
+
+      const found = Object.entries(moods)
+        .map(([key, mood]) => ({ key, score: mood.words.filter(word => input.value.toLowerCase().includes(word)).length }))
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 4);
+
+      moodStrip.innerHTML = found.length
+        ? found.map(item => `<span class="chip">${item.key}</span>`).join('')
+        : ['calm', 'ocean', 'sunset', 'slow travel'].map(item => `<span class="chip">${item}</span>`).join('');
+    }
+
+    function showResults() {
+      cards.innerHTML = destinations.map((place, index) => `
+        <article class="destination-card" id="card-${index}">
+          <div class="card-inner">
+            <div class="card-face card-front">
+              <div>
+                <div class="match">${place.match}</div>
+                <div class="story-title">Traveller feeling</div>
+                <p class="quote">“${place.story}”</p>
+                
+              </div>
+              <div class="card-actions">
+                <button class="card-link" onclick="flipCard(${index})">Discover destination</button>
+              </div>
+            </div>
+
+            <div class="card-face card-back">
+              <img src="${place.image}" alt="${place.name}">
+              <div class="destination-body">
+                <div>
+                  <h3>${place.name}</h3>
+                  <p>${place.from}</p>
+                </div>
+                <div class="feelings">
+                  ${place.feelings.map(feeling => `<span>${feeling}</span>`).join('')}
+                </div>
+                <div class="card-actions">
+                  <button class="ghost-button" onclick="flipCard(${index})">Back to story</button>
+                  <a class="card-link" href="${place.flightUrl}" target="_blank" rel="noopener">How to get there</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      `).join('');
+
+      results.style.display = 'block';
+      results.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function flipCard(index) {
+      document.getElementById(`card-${index}`).classList.toggle('is-flipped');
+    }
+
+    input.addEventListener('input', updateMood);
+    button.addEventListener('click', showResults);
+  </script>
 </body>
 </html>
