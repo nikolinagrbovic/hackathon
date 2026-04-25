@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feeltrip Stories</title>
+
+  <style>
+    :root {
+      --deep: #05203c;
+      --blue: #0570de;
+      --red: #ff3b3b;
+      --text: #12324a;
+      --muted: #6a7d8f;
+      --shadow: 0 24px 80px rgba(5, 32, 60, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 12%, #d9efff, transparent 34%),
+        radial-gradient(circle at 80% 18%, #fff2c8, transparent 32%),
+        linear-gradient(135deg, #eaf7ff, #ffffff 62%);
+      min-height: 100vh;
+    }
+
+    .nav {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7vw;
+      color: white;
+      background: var(--deep);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+    }
+
+    .logo span { color: #00b2ff; }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      background: white;
+      color: var(--deep);
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      padding: 72px 7vw 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.72);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-weight: 700;
+      color: #1767a8;
+      box-shadow: 0 8px 30px rgba(5, 32, 60, 0.08);
+    }
+
+    h1 {
+      max-width: 850px;
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: 0.96;
+      letter-spacing: -3px;
+      margin: 22px 0 18px;
+      color: var(--deep);
+    }
+
+    .lead {
+      max-width: 680px;
+      font-size: 19px;
+      line-height: 1.6;
+      color: #39586f;
+      margin: 0;
+    }
+
+    .stories-section {
+      padding: 28px 7vw 90px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .search-box {
+      flex: 1;
+      max-width: 520px;
+      background: rgba(255,255,255,0.86);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-box input {
+      width: 100%;
+      border: 0;
+      outline: none;
+      background: white;
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-size: 15px;
+      color: var(--deep);
+    }
+
+    .filter-pill {
+      border: 0;
+      border-radius: 999px;
+      background: var(--blue);
+      color: white;
+      font-weight: 800;
+      padding: 0 22px;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(5,112,222,0.24);
+    }
+
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .story-card {
+      min-height: 430px;
+      border-radius: 30px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 22px 70px rgba(5, 32, 60, 0.13);
+      border: 1px solid rgba(5, 32, 60, 0.07);
+      transition: transform 220ms ease, box-shadow 220ms ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .story-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 30px 90px rgba(5, 32, 60, 0.18);
+    }
+
+    .image-wrap {
+      position: relative;
+      height: 230px;
+    }
+
+    .image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-overlay {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 46px 18px 18px;
+      background: linear-gradient(180deg, transparent, rgba(5, 32, 60, 0.84));
+      color: white;
+    }
+
+    .image-overlay h3 {
+      margin: 0;
+      font-size: 27px;
+      letter-spacing: -0.8px;
+    }
+
+    .story-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .match {
+      width: fit-content;
+      background: #e6f4ff;
+      color: #075ea8;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .quote {
+      color: var(--deep);
+      line-height: 1.45;
+      font-size: 19px;
+      letter-spacing: -0.4px;
+      margin: 0;
+      font-weight: 800;
+    }
+
+    .feelings {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: auto;
+    }
+
+    .feelings span {
+      background: #f3f7fb;
+      padding: 6px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #557086;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      padding-top: 8px;
+    }
+
+    .card-link,
+    .journey-button {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 8px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .card-link {
+      background: var(--blue);
+      color: white;
+    }
+
+    .journey-button {
+      background: var(--red);
+      color: white;
+    }
+
+    .empty-state {
+      display: none;
+      padding: 40px;
+      border-radius: 30px;
+      background: white;
+      box-shadow: var(--shadow);
+      text-align: center;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    @media (max-width: 1100px) {
+      .stories-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 680px) {
+      .nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 48px 20px 24px; }
+      .stories-section { padding: 24px 20px 70px; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .search-box { max-width: none; }
+      .stories-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="logo">feel<span>trip</span></div>
+
+    <div class="nav-links">
+      <a href="index.html">Search feelings</a>
+      <a href="https://www.skyscanner.net" target="_blank">Find flights</a>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <div class="eyebrow">✨ Real stories, emotional routes</div>
+
+    <h1>Explore places through the feelings people found there.</h1>
+
+    <p class="lead">
+      Browse traveller stories, moods and destinations. Find a place not by what it is,
+      but by what it made someone feel.
+    </p>
+  </main>
+
+  <section class="stories-section">
+    <div class="toolbar">
+      <div class="search-box">
+        <input id="storySearch" type="text" placeholder="Search by feeling, city, mood..." />
+      </div>
+      <button class="filter-pill" id="clearSearch">Clear</button>
+    </div>
+
+    <div class="stories-grid" id="storiesGrid"></div>
+
+    <div class="empty-state" id="emptyState">
+      No stories match this feeling yet.
+    </div>
+  </section>
+
+  <script>
+    const storiesGrid = document.getElementById('storiesGrid');
+    const storySearch = document.getElementById('storySearch');
+    const clearSearch = document.getElementById('clearSearch');
+    const emptyState = document.getElementById('emptyState');
+
+    let allStories = [];
+
+    async function loadStories() {
+      storiesGrid.innerHTML = `<p>Loading stories...</p>`;
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/stories-preview");
+        allStories = await response.json();
+        renderStories(allStories);
+      } catch (error) {
+        storiesGrid.innerHTML = `<p>Could not load stories from backend.</p>`;
+        console.error(error);
+      }
+    }
+
+    function renderStories(stories) {
+      if (!stories.length) {
+        storiesGrid.innerHTML = "";
+        emptyState.style.display = "block";
+        return;
+      }
+
+      emptyState.style.display = "none";
+
+      storiesGrid.innerHTML = stories.map((place) => `
+        <article class="story-card">
+          <div class="image-wrap">
+            <img src="${place.image}" alt="${place.name}">
+            <div class="image-overlay">
+              <h3>${place.name || "Unknown place"}</h3>
+            </div>
+          </div>
+
+          <div class="story-body">
+            <div class="match">${place.match || "Feeling match"}</div>
+
+            <p class="quote">“${place.story || ""}”</p>
+
+            <div class="feelings">
+              ${(place.feelings || []).slice(0, 5).map(feeling => `<span>${feeling}</span>`).join('')}
+            </div>
+
+            <div class="card-actions">
+              <button class="journey-button" onclick="openJourney('${encodeURIComponent(place.name || "Unknown place")}')">
+                Journey
+              </button>
+
+              <a class="card-link" href="${place.flightUrl || "https://www.skyscanner.net"}" target="_blank" rel="noopener">
+                Flights
+              </a>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function filterStories() {
+      const query = storySearch.value.toLowerCase().trim();
+
+      const filtered = allStories.filter(place => {
+        const text = [
+          place.name,
+          place.match,
+          place.story,
+          ...(place.feelings || [])
+        ].join(" ").toLowerCase();
+
+        return text.includes(query);
+      });
+
+      renderStories(filtered);
+    }
+
+    function openJourney(encodedPlaceName) {
+      const placeName = decodeURIComponent(encodedPlaceName);
+      window.location.href = `journey.html?place=${encodeURIComponent(placeName)}`;
+    }
+
+    storySearch.addEventListener('input', filterStories);
+
+    clearSearch.addEventListener('click', () => {
+      storySearch.value = "";
+      renderStories(allStories);
+    });
+
+    loadStories();
+  </script>
+</body>
+</html>
