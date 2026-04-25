@@ -1,0 +1,283 @@
+[
+  {
+    "city": "Barcelona",
+    "country": "Spain",
+    "story": "the air inside was cool and smelled faintly of incense and cut stone",
+    "mood": "romantic",
+    "climate": "cool",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "sagrada familia",
+      "incense",
+      "cut stone",
+      "marble",
+      "orange light"
+    ],
+    "activities": [
+      "staring at the ceiling",
+      "looking out over rooftops"
+    ],
+    "sensory": [
+      "smell",
+      "light",
+      "texture"
+    ],
+    "travel_style": [
+      "whimsical",
+      "meditative"
+    ],
+    "landmarks": [
+      "Sagrada Familia",
+      "Park Güell",
+      "Casa Batlló",
+      "The Gothic Quarter",
+      "La Boqueria Market"
+    ],
+    "image": "https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Barcelona"
+  },
+  {
+    "city": "Madrid",
+    "country": "Spain",
+    "story": "I found a palace made of glass and iron, shimmering next to a lake with black swans.",
+    "mood": "romantic",
+    "climate": "warm",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "glass",
+      "iron",
+      "lake",
+      "swans",
+      "green lung",
+      "jewel box"
+    ],
+    "activities": [
+      "walking",
+      "exploring",
+      "relaxing"
+    ],
+    "sensory": [
+      "light",
+      "silence",
+      "nature"
+    ],
+    "travel_style": [
+      "leisurely",
+      "escapism"
+    ],
+    "landmarks": [
+      "Palacio de Cristal",
+      "Royal Palace of Madrid",
+      "Prado Museum",
+      "Plaza Mayor",
+      "Puerta del Sol"
+    ],
+    "image": "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Madrid"
+  },
+  {
+    "city": "Paris",
+    "country": "France",
+    "story": "the city below began to look like a toy set as i climbed higher, thousands of golden lights flickered to life all at once",
+    "mood": "romantic",
+    "climate": "cold",
+    "pace": "balanced",
+    "crowd": "quiet",
+    "tags": [
+      "eiffel tower",
+      "paris",
+      "nighttime",
+      "adventure",
+      "excitement"
+    ],
+    "activities": [
+      "climbing",
+      "exploring",
+      "taking in views"
+    ],
+    "sensory": [
+      "light",
+      "sound",
+      "view"
+    ],
+    "travel_style": [
+      "adventure",
+      "romance"
+    ],
+    "landmarks": [
+      "The Eiffel Tower",
+      "The Louvre Museum",
+      "Sacré-Cœur Basilica",
+      "Arc de Triomphe",
+      "Notre-Dame Cathedral"
+    ],
+    "image": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Paris"
+  },
+  {
+    "city": "Rome",
+    "country": "Italy",
+    "story": "I stood in the center of a massive, broken oval of stone under a relentless, beating sun, and for a moment, the modern city outside vanished.",
+    "mood": "romantic",
+    "climate": "warm",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "ancient",
+      "history",
+      "stone",
+      "sun",
+      "ghosts"
+    ],
+    "activities": [
+      "exploring",
+      "walking",
+      "standing",
+      "imagining"
+    ],
+    "sensory": [
+      "heat",
+      "light",
+      "sound",
+      "air"
+    ],
+    "travel_style": [
+      "independent",
+      "self-guided",
+      "historical"
+    ],
+    "landmarks": [
+      "The Colosseum",
+      "The Pantheon",
+      "Trevi Fountain",
+      "St. Peter’s Basilica",
+      "The Roman Forum"
+    ],
+    "image": "https://images.unsplash.com/photo-1529260830199-42c24126f198?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Rome"
+  },
+  {
+    "city": "Berlin",
+    "country": "Germany",
+    "story": "standing under the arches of a massive sandstone gate, feeling a mix of triumph and heaviness",
+    "mood": "mysterious",
+    "climate": "cold",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "brandenburg gate",
+      "history",
+      "symbolism",
+      "division",
+      "reunification"
+    ],
+    "activities": [
+      "visiting museums",
+      "exploring memorials",
+      "walking in parks"
+    ],
+    "sensory": [
+      "wind",
+      "stone",
+      "arches",
+      "silence"
+    ],
+    "travel_style": [
+      "reflective",
+      "historical",
+      "solitary"
+    ],
+    "landmarks": [
+      "Brandenburg Gate",
+      "The Reichstag Dome",
+      "Memorial to the Murdered Jews of Europe",
+      "East Side Gallery",
+      "Berlin TV Tower (Fernsehturm)"
+    ],
+    "image": "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Berlin"
+  },
+  {
+    "city": "Athens",
+    "country": "Greece",
+    "story": "the massive skeleton of a temple that defined Western world architecture",
+    "mood": "romantic",
+    "climate": "warm",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "ancient",
+      "parthenon",
+      "greek",
+      "history",
+      "architecture",
+      "marble"
+    ],
+    "activities": [
+      "climbing",
+      "exploring",
+      "visiting",
+      "admiring"
+    ],
+    "sensory": [
+      "wind",
+      "sun",
+      "stone",
+      "columns"
+    ],
+    "travel_style": [
+      "hiking",
+      "cultural",
+      "historical"
+    ],
+    "landmarks": [
+      "The Parthenon",
+      "The Ancient Agora",
+      "Panathenaic Stadium",
+      "Anafiotika",
+      "The Acropolis Museum"
+    ],
+    "image": "https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Athens"
+  },
+  {
+    "city": "Oslo",
+    "country": "Norway",
+    "story": "I hiked up the sloping white stone as if I were scaling a glacier.",
+    "mood": "romantic",
+    "climate": "cold",
+    "pace": "slow",
+    "crowd": "quiet",
+    "tags": [
+      "white marble",
+      "glass",
+      "rooftop",
+      "fjord",
+      "architecture"
+    ],
+    "activities": [
+      "hiking",
+      "exploring"
+    ],
+    "sensory": [
+      "fresh air",
+      "wind",
+      "stone"
+    ],
+    "travel_style": [
+      "adventure",
+      "nature"
+    ],
+    "landmarks": [
+      "Oslo Opera House",
+      "Vigeland Park (Frogner Park)",
+      "The Fram Museum (Polar Ship Fram)",
+      "Oslo City Hall (Rådhuset)",
+      "Akershus Fortress"
+    ],
+    "image": "https://images.unsplash.com/photo-1605283176560-37dcb61c0cce?auto=format&fit=crop&w=900&q=80",
+    "flightUrl": "https://www.skyscanner.net/transport/flights/?query=Oslo"
+  }
+]
