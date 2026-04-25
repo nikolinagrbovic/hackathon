@@ -401,3 +401,9 @@ def get_journey(city: str):
             }
 
     return {"error": "Place not found"}
+
+
+PLACES_PATH = Path("places.json")
+@app.get("/stories")
+def get_stories():
+    return load_json(PLACES_PATH)
