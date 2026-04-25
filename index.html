@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feeltrip</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: linear-gradient(135deg, #eef6ff, #fff4d6);
+  background-size: 200% 200%;
+  animation: move 10s ease infinite;
+  transition: background 0.8s ease;
+}
+
+@keyframes move {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  max-width: 600px;
+  width: 80%;
+}
+
+h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #05203c;
+}
+
+textarea {
+  width: 100%;
+  padding: 20px;
+  border-radius: 20px;
+  border: none;
+  font-size: 18px;
+  outline: none;
+  resize: none;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+}
+
+.hint {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #6a7d8f;
+}
+
+button {
+  margin-top: 20px;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 999px;
+  background: #0570de;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* RIGHT SIDE FEELING PANEL */
+.right {
+  position: relative;
+  overflow: hidden;
+}
+
+.right::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(5,112,222,0.25), transparent 70%);
+  top: 10%;
+  left: 20%;
+  filter: blur(80px);
+  animation: float1 12s ease-in-out infinite;
+}
+
+.right::after {
+  content: '';
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(255,211,107,0.25), transparent 70%);
+  bottom: 10%;
+  right: 20%;
+  filter: blur(80px);
+  animation: float2 14s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0% { transform: translate(0,0); }
+  50% { transform: translate(40px, 30px); }
+  100% { transform: translate(0,0); }
+}
+
+@keyframes float2 {
+  0% { transform: translate(0,0); }
+  50% { transform: translate(-30px, -40px); }
+  100% { transform: translate(0,0); }
+}
+
+@media (max-width: 900px) {
+  body {
+    grid-template-columns: 1fr;
+  }
+  .right {
+    height: 300px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="left">
+  <div class="container">
+    <h1>Tell us what you want to feel</h1>
+    <textarea id="input" placeholder="Quiet mornings, ocean air, slow evenings..."></textarea>
+    <p class="hint">Don’t describe a place. Describe a feeling.</p>
+    <button>Show me how it feels →</button>
+  </div>
+</div>
+
+<div class="right"></div>
+
+<script>
+const input = document.getElementById('input');
+
+const moods = {
+  ocean: { words: ['sea','ocean','beach'], colors: ['#7fc4f2','#4da3d9'] },
+  nature: { words: ['forest','green','mountain'], colors: ['#9fd8b6','#6fbf9f'] },
+  sun: { words: ['sun','warm','sunset'], colors: ['#ffd36b','#f4b942'] },
+  romantic: { words: ['love','slow','dream'], colors: ['#f7a8c4','#e07aa3'] }
+};
+
+input.addEventListener('input', () => {
+  const text = input.value.toLowerCase();
+
+  let colors = [];
+
+  Object.values(moods).forEach(m => {
+    if (m.words.some(w => text.includes(w))) {
+      colors.push(...m.colors);
+    }
+  });
+
+  if (colors.length === 0 && text.length > 0) {
+    colors = ['#cfe8ff', '#ffe4b5'];
+  }
+
+  if (!text) {
+    document.body.style.background = 'linear-gradient(135deg, #eef6ff, #fff4d6)';
+  } else {
+    document.body.style.background = `linear-gradient(135deg, ${colors.join(',')})`;
+  }
+});
+</script>
+
+</body>
+</html>
