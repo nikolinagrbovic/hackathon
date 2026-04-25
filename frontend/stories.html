@@ -346,9 +346,11 @@
       storiesGrid.innerHTML = `<p>Loading stories...</p>`;
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/stories-preview");
+        const response = await fetch("http://127.0.0.1:8001/stories-preview");
         allStories = await response.json();
         renderStories(allStories);
+
+
       } catch (error) {
         storiesGrid.innerHTML = `<p>Could not load stories from backend.</p>`;
         console.error(error);
@@ -367,9 +369,9 @@
       storiesGrid.innerHTML = stories.map((place) => `
         <article class="story-card">
           <div class="image-wrap">
-            <img src="${place.image}" alt="${place.name}">
+            <img src="${place.image}" alt="${place.city}">
             <div class="image-overlay">
-              <h3>${place.name || "Unknown place"}</h3>
+              <h3>${place.city || "Unknown place"}</h3>
             </div>
           </div>
 
@@ -383,7 +385,7 @@
             </div>
 
             <div class="card-actions">
-              <button class="journey-button" onclick="openJourney('${encodeURIComponent(place.name || "Unknown place")}')">
+              <button class="journey-button" onclick="openJourney('${encodeURIComponent(place.city || "Unknown place")}')">
                 Journey
               </button>
 
@@ -396,22 +398,18 @@
       `).join('');
     }
 
-    function filterStories() {
-      const query = storySearch.value.toLowerCase().trim();
+function filterStories() {
+  const query = storySearch.value.toLowerCase().trim();
 
-      const filtered = allStories.filter(place => {
-        const text = [
-          place.name,
-          place.match,
-          place.story,
-          ...(place.feelings || [])
-        ].join(" ").toLowerCase();
-
-        return text.includes(query);
-      });
-
-      renderStories(filtered);
+  const filtered = allStories.filter(place => {
+    if (place.city) {
+      return place.city.toLowerCase().includes(query);
     }
+    return false; 
+  });
+
+  renderStories(filtered);
+}
 
     function openJourney(encodedPlaceName) {
       const placeName = decodeURIComponent(encodedPlaceName);
@@ -426,6 +424,19 @@
     });
 
     loadStories();
+
+
+  async function loadStories() {
+    try {
+      const response = await fetch('http://localhost:8000/stories');
+      allStories = await response.json();
+      renderStories(allStories);
+    } catch (error) {
+      console.error("Error:", error);
+      document.getElementById('storiesGrid').innerHTML = "<p>Error al conectar con el servidor.</p>";
+    }
+  }
   </script>
+  
 </body>
 </html>
