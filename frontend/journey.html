@@ -1,578 +1,733 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Feeltrip Journey</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Feeltrip Journey</title>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <style>
-    :root {
-      --deep: #05203c;
-      --blue: #0570de;
-      --red: #ff3b3b;
-      --text: #12324a;
-      --muted: #6a7d8f;
-      --card: rgba(255,255,255,0.9);
-      --shadow: 0 24px 80px rgba(5,32,60,0.16);
-    }
+<style>
+:root {
+  --deep: #05203c;
+  --blue: #0570de;
+  --red: #ff3b3b;
+  --text: #12324a;
+  --card: rgba(255,255,255,0.86);
+  --shadow: 0 24px 80px rgba(5,32,60,0.16);
+}
 
-    * { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 20% 10%, #d9efff, transparent 34%),
-        radial-gradient(circle at 82% 18%, #fff2c8, transparent 32%),
-        linear-gradient(135deg, #eaf7ff, #fff 62%);
-      min-height: 100vh;
-    }
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 18% 8%, #d9efff, transparent 34%),
+    radial-gradient(circle at 82% 16%, #fff2c8, transparent 32%),
+    linear-gradient(135deg, #eaf7ff, #ffffff 62%);
+  min-height: 100vh;
+}
 
-    .nav {
-      height: 72px;
-      padding: 0 7vw;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--deep);
-      color: white;
-    }
+.nav {
+  height: 72px;
+  padding: 0 7vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--deep);
+  color: white;
+}
 
-    .logo {
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: -0.8px;
-    }
+.logo {
+  font-size: 24px;
+  font-weight: 900;
+}
 
-    .logo span { color: #00b2ff; }
+.logo span {
+  color: #00b2ff;
+}
 
-    .nav a {
-      color: white;
-      text-decoration: none;
-      background: rgba(255,255,255,0.1);
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-weight: 800;
-      font-size: 14px;
-    }
+.nav a {
+  color: white;
+  text-decoration: none;
+  background: rgba(255,255,255,0.1);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 14px;
+}
 
-    .page {
-      padding: 42px 7vw 90px;
-    }
+.page {
+  padding: 46px 7vw 90px;
+}
 
-    .hero {
-      display: grid;
-      grid-template-columns: 0.95fr 1.05fr;
-      gap: 28px;
-      align-items: stretch;
-      margin-bottom: 34px;
-    }
+.hero {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 28px;
+  align-items: stretch;
+  margin-bottom: 34px;
+}
 
-    .intro {
-      background: var(--card);
-      border-radius: 34px;
-      padding: 36px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-    }
+.hero-left {
+  background: var(--card);
+  border-radius: 36px;
+  padding: 38px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(22px);
+  border: 1px solid rgba(5,32,60,0.08);
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-    .eyebrow {
-      display: inline-flex;
-      background: #e6f4ff;
-      color: #075ea8;
-      padding: 9px 14px;
-      border-radius: 999px;
-      font-weight: 900;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
+.eyebrow,
+.story-kicker {
+  display: inline-flex;
+  width: fit-content;
+  background: #e6f4ff;
+  color: #075ea8;
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 22px;
+}
 
-    h1 {
-      margin: 22px 0 16px;
-      color: var(--deep);
-      font-size: clamp(42px, 5vw, 70px);
-      letter-spacing: -2.8px;
-      line-height: 0.95;
-    }
+.story-kicker {
+  background: #fff0f0;
+  color: var(--red);
+}
 
-    .lead {
-      margin: 0;
-      font-size: 18px;
-      line-height: 1.65;
-      color: #39586f;
-    }
+h1 {
+  font-size: clamp(46px, 5vw, 72px);
+  line-height: 0.94;
+  letter-spacing: -2.8px;
+  margin: 0 0 22px;
+  color: var(--deep);
+}
 
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 22px;
-    }
+.lead {
+  font-size: 18px;
+  line-height: 1.65;
+  color: #39586f;
+  margin: 0;
+}
 
-    .chips span {
-      background: #f3f7fb;
-      color: #557086;
-      padding: 8px 11px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-    }
+.chips {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
-    .map-card {
-      position: relative;
-      min-height: 500px;
-      border-radius: 34px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      background: white;
-    }
+.chips span {
+  background: #f3f7fb;
+  color: #557086;
+  padding: 8px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
 
-    #map {
-      height: 100%;
-      min-height: 500px;
-      width: 100%;
-    }
+.mini-note {
+  margin-top: 30px;
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(5,32,60,0.08);
+  color: #39586f;
+  line-height: 1.5;
+  font-size: 15px;
+}
 
-    .map-panel {
-      position: absolute;
-      z-index: 999;
-      left: 18px;
-      right: 18px;
-      bottom: 18px;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(18px);
-      border-radius: 24px;
-      padding: 20px;
-      box-shadow: 0 18px 50px rgba(5,32,60,0.16);
-    }
+.map-card {
+  position: relative;
+  height: 520px;
+  border-radius: 36px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(5,32,60,0.08);
+  background: white;
+}
 
-    .map-panel h3 {
-      margin: 0 0 8px;
-      color: var(--deep);
-      font-size: 24px;
-      letter-spacing: -0.7px;
-    }
+#map {
+  height: 100%;
+  width: 100%;
+}
 
-    .map-panel p {
-      margin: 0;
-      color: #39586f;
-      line-height: 1.55;
-      font-size: 15px;
-    }
+.map-panel {
+  position: absolute;
+  z-index: 999;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(18px);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 18px 50px rgba(5,32,60,0.16);
+}
 
-    .section-title {
-      margin: 36px 0 20px;
-    }
+.map-panel h3 {
+  margin: 0 0 8px;
+  color: var(--deep);
+  font-size: 24px;
+}
 
-    .section-title h2 {
-      margin: 0;
-      color: var(--deep);
-      font-size: 38px;
-      letter-spacing: -1.4px;
-    }
+.map-panel p {
+  margin: 0;
+  color: #39586f;
+  line-height: 1.55;
+  font-size: 15px;
+}
 
-    .section-title p {
-      margin: 8px 0 0;
-      color: var(--muted);
-    }
+.story-experience {
+  margin-top: 42px;
+  padding: 48px;
+  border-radius: 44px;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(255,59,59,0.12), transparent 26%),
+    radial-gradient(circle at 90% 20%, rgba(5,112,222,0.10), transparent 30%),
+    linear-gradient(135deg, rgba(255,255,255,0.96), rgba(248,252,255,0.92));
+  box-shadow: 0 30px 100px rgba(5,32,60,0.18);
+  border: 1px solid rgba(5,32,60,0.08);
+}
 
-    .plan {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
+.story-header h2 {
+  margin: 0;
+  max-width: 760px;
+  font-size: clamp(38px, 5vw, 68px);
+  line-height: 0.94;
+  letter-spacing: -2.5px;
+  color: var(--deep);
+}
 
-    .plan-card {
-      background: var(--card);
-      border-radius: 28px;
-      padding: 24px;
-      box-shadow: 0 18px 58px rgba(5,32,60,0.10);
-      border: 1px solid rgba(5,32,60,0.08);
-    }
+.story-header p {
+  margin-top: 18px;
+  max-width: 720px;
+  font-size: 19px;
+  line-height: 1.65;
+  color: #39586f;
+}
 
-    .plan-card strong {
-      display: block;
-      color: #075ea8;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
+.story-button {
+  margin-top: 34px;
+  width: 100%;
+  min-height: 84px;
+  border-radius: 999px;
+  border: 0;
+  background: linear-gradient(135deg, #ff2f2f, #ff6767);
+  color: white;
+  font-size: 22px;
+  font-weight: 950;
+  cursor: pointer;
+  box-shadow: 0 24px 70px rgba(255,59,59,0.42);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
 
-    .plan-card h3 {
-      margin: 0 0 10px;
-      color: var(--deep);
-      font-size: 24px;
-      letter-spacing: -0.6px;
-    }
+.story-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 28px 80px rgba(255,59,59,0.48);
+}
 
-    .plan-card p {
-      margin: 0;
-      color: #39586f;
-      line-height: 1.55;
-      font-size: 15px;
-    }
+.story-button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
+}
 
-    .stops {
-      display: grid;
-      gap: 14px;
-    }
+.story-output {
+  margin-top: 34px;
+  padding: 40px;
+  border-radius: 40px;
+  background:
+    linear-gradient(135deg, rgba(255,250,243,0.96), rgba(255,255,255,0.98));
+  border: 1px solid rgba(5,32,60,0.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.8),
+    0 20px 60px rgba(5,32,60,0.08);
+  position: relative;
+  overflow: hidden;
+}
 
-    .stop {
-      display: grid;
-      grid-template-columns: 52px 1fr;
-      gap: 14px;
-      background: var(--card);
-      padding: 18px;
-      border-radius: 24px;
-      box-shadow: 0 14px 42px rgba(5,32,60,0.08);
-      cursor: pointer;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
+.story-output::before {
+  content: "";
+  position: absolute;
+  inset: 20px;
+  border: 2px dashed rgba(255,59,59,0.13);
+  border-radius: 34px;
+  pointer-events: none;
+}
 
-    .stop:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 20px 60px rgba(5,32,60,0.12);
-    }
+.story-route {
+  position: relative;
+  display: grid;
+  gap: 30px;
+  z-index: 1;
+}
 
-    .stop-num {
-      height: 52px;
-      border-radius: 17px;
-      background: var(--blue);
-      color: white;
-      display: grid;
-      place-items: center;
-      font-weight: 900;
-      font-size: 18px;
-    }
+.story-route::before {
+  content: "";
+  position: absolute;
+  left: 32px;
+  top: 48px;
+  width: 4px;
+  height: calc(100% - 118px);
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--red) 0 14px,
+    transparent 14px 26px
+  );
+  border-radius: 999px;
+}
 
-    .stop h3 {
-      margin: 0 0 5px;
-      color: var(--deep);
-      font-size: 21px;
-      letter-spacing: -0.4px;
-    }
+.story-step {
+  position: relative;
+  margin-left: 86px;
+  padding: 28px 30px;
+  border-radius: 32px;
+  background: rgba(255,255,255,0.94);
+  border: 1px solid rgba(5,32,60,0.09);
+  box-shadow: 0 20px 54px rgba(5,32,60,0.10);
+  font-size: 18px;
+  line-height: 1.75;
+  animation: fadeUp 0.6s ease both;
+}
 
-    .stop p {
-      margin: 0;
-      color: #557086;
-      line-height: 1.45;
-      font-size: 14px;
-    }
+.story-step::before {
+  content: attr(data-step);
+  position: absolute;
+  left: -86px;
+  top: 22px;
+  width: 58px;
+  height: 58px;
+  border-radius: 21px;
+  background: var(--deep);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 950;
+  box-shadow: 0 16px 34px rgba(5,32,60,0.25);
+}
 
-    .actions {
-      margin-top: 30px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
+.story-step::after {
+  content: "✦";
+  position: absolute;
+  left: -50px;
+  top: 66px;
+  color: var(--red);
+  font-size: 18px;
+}
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 56px;
-      padding: 0 24px;
-      border-radius: 999px;
-      text-decoration: none;
-      font-weight: 900;
-      border: 0;
-      cursor: pointer;
-    }
+.story-step:nth-child(2) {
+  transform: translateX(34px) rotate(0.4deg);
+}
 
-    .primary {
-      background: var(--blue);
-      color: white;
-      box-shadow: 0 16px 34px rgba(5,112,222,0.24);
-    }
+.story-step:nth-child(3) {
+  transform: translateX(-10px) rotate(-0.4deg);
+}
 
-    .danger {
-      background: var(--red);
-      color: white;
-      box-shadow: 0 16px 34px rgba(255,59,59,0.24);
-    }
+.story-destination {
+  margin-left: 86px;
+  padding: 26px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.22), transparent 34%),
+    linear-gradient(135deg, var(--deep), #075ea8);
+  color: white;
+  font-size: 22px;
+  font-weight: 950;
+  text-align: center;
+  box-shadow: 0 24px 70px rgba(5,32,60,0.28);
+}
 
-    .soft {
-      background: #eef6ff;
-      color: #075ea8;
-    }
+.actions {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
 
-    @media (max-width: 1000px) {
-      .hero,
-      .plan {
-        grid-template-columns: 1fr;
-      }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  padding: 0 24px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 900;
+  border: 0;
+  cursor: pointer;
+}
 
-      .map-card,
-      #map {
-        min-height: 420px;
-      }
-    }
+.danger {
+  background: var(--red);
+  color: white;
+  box-shadow: 0 16px 34px rgba(255,59,59,0.24);
+}
 
-    @media (max-width: 640px) {
-      .page {
-        padding: 28px 20px 70px;
-      }
+.soft {
+  background: #eef6ff;
+  color: #075ea8;
+}
 
-      .intro {
-        padding: 26px;
-      }
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotate(-1deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+}
 
-      .nav {
-        padding: 0 20px;
-      }
-    }
-  </style>
+@media (max-width: 1000px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-left {
+    min-height: auto;
+  }
+
+  .map-card {
+    height: 430px;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 28px 20px 70px;
+  }
+
+  .nav {
+    padding: 0 20px;
+  }
+
+  .hero-left,
+  .story-experience {
+    padding: 28px;
+  }
+
+  .story-button {
+    font-size: 17px;
+  }
+
+  .story-output {
+    padding: 24px;
+  }
+
+  .story-step,
+  .story-destination {
+    margin-left: 70px;
+  }
+
+  .story-step::before {
+    left: -72px;
+  }
+
+  .story-step:nth-child(2),
+  .story-step:nth-child(3) {
+    transform: none;
+  }
+}
+</style>
 </head>
 
 <body>
-  <nav class="nav">
-    <div class="logo">feel<span>trip</span></div>
-    <a href="index.html">Back to search</a>
-  </nav>
+<nav class="nav">
+  <div class="logo">feel<span>trip</span></div>
+  <a href="index.html">Back to search</a>
+</nav>
 
-  <main class="page" id="app">
-    <p>Loading journey...</p>
-  </main>
+<main class="page" id="app">
+  <p>Loading journey...</p>
+</main>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <script>
-    const API_BASE = "http://127.0.0.1:8000";
-    const params = new URLSearchParams(window.location.search);
-    const placeName = params.get("place");
-    const app = document.getElementById("app");
+<script>
+const API_BASE = "http://127.0.0.1:8000";
+const params = new URLSearchParams(window.location.search);
+const placeName = params.get("place");
+const app = document.getElementById("app");
 
-    let map;
-    let markers = [];
+let map;
+let markers = [];
 
-    function cityFromPlaceParam(value) {
-      if (!value) return "";
-      return decodeURIComponent(value).split(",")[0].trim();
+function cityFromPlaceParam(value) {
+  if (!value) return "";
+  return decodeURIComponent(value).split(",")[0].trim();
+}
+
+function escapeText(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function validCoords(coords) {
+  return (
+    Array.isArray(coords) &&
+    coords.length === 2 &&
+    typeof coords[0] === "number" &&
+    typeof coords[1] === "number"
+  );
+}
+
+function fakeCoordinatesAround(center, count) {
+  const [lat, lng] = center;
+
+  return Array.from({ length: count }, (_, i) => {
+    const angle = (i / Math.max(count, 1)) * Math.PI * 2;
+    const radius = 0.012 + i * 0.002;
+
+    return [
+      lat + Math.cos(angle) * radius,
+      lng + Math.sin(angle) * radius
+    ];
+  });
+}
+
+function getLandmarkCoords(place, landmarks, center) {
+  const landmarkCoordinatesMap =
+    place.landmarkCoordinates ||
+    place.landmark_coordinates ||
+    {};
+
+  const fallbackCoords = fakeCoordinatesAround(center, landmarks.length);
+
+  return landmarks.map((landmark, index) => {
+    const realCoords = landmarkCoordinatesMap[landmark];
+
+    if (validCoords(realCoords)) {
+      return realCoords;
     }
 
-    function validCoords(coords) {
-      return (
-        Array.isArray(coords) &&
-        coords.length === 2 &&
-        typeof coords[0] === "number" &&
-        typeof coords[1] === "number"
-      );
-    }
+    return fallbackCoords[index];
+  });
+}
 
-    function fakeCoordinatesAround(center, count) {
-      const [lat, lng] = center;
+function stopDescription(place, landmark, index) {
+  const mood = place.mood || "travel";
+  const sensory = (place.sensory || []).slice(0, 3).join(", ");
 
-      return Array.from({ length: count }, (_, i) => {
-        const angle = (i / Math.max(count, 1)) * Math.PI * 2;
-        const radius = 0.012 + i * 0.002;
+  const templates = [
+    `Start here. Notice ${sensory || "the light, the air and the movement"} before the city becomes busy around you.`,
+    `This is where the ${mood} side of ${place.city} starts to feel real.`,
+    `Pause here instead of rushing. Let the place become a memory before it becomes a photo.`,
+    `Walk slowly around this stop and let the route feel more like a scene than a checklist.`,
+    `End here with the widest feeling of the city around you.`
+  ];
 
-        return [
-          lat + Math.cos(angle) * radius,
-          lng + Math.sin(angle) * radius
-        ];
-      });
-    }
+  return templates[index % templates.length];
+}
 
-    function getLandmarkCoords(place, landmarks, center) {
-      const landmarkCoordinatesMap =
-        place.landmarkCoordinates ||
-        place.landmark_coordinates ||
-        {};
+function focusStop(index) {
+  const place = window.currentPlace;
+  const landmark = window.currentLandmarks[index];
+  const coords = window.currentCoords[index];
+  const panel = document.getElementById("mapPanel");
 
-      const fallbackCoords = fakeCoordinatesAround(center, landmarks.length);
+  panel.innerHTML = `
+    <h3>${escapeText(landmark)}</h3>
+    <p>${escapeText(stopDescription(place, landmark, index))}</p>
+  `;
 
-      return landmarks.map((landmark, index) => {
-        const realCoords = landmarkCoordinatesMap[landmark];
+  map.flyTo(coords, 15, { duration: 0.7 });
 
-        if (validCoords(realCoords)) {
-          return realCoords;
-        }
+  if (markers[index]) {
+    markers[index].openPopup();
+  }
+}
 
-        return fallbackCoords[index];
-      });
-    }
+function renderJourney(place) {
+  const landmarks = place.landmarks || [];
 
-    function stopDescription(place, landmark, index) {
-      const mood = place.mood || "travel";
-      const pace = place.pace || "balanced";
-      const sensory = (place.sensory || []).slice(0, 3).join(", ");
+  const center = validCoords(place.coordinates)
+    ? place.coordinates
+    : [48.8566, 2.3522];
 
-      const templates = [
-        `Start here and let the first impression set the route. Notice ${sensory || "the light and air"} before moving on.`,
-        `Walk slowly around this stop. This is where the ${mood} side of ${place.city} becomes easier to feel.`,
-        `Pause here for a few minutes. Look for small textures, sounds and details instead of rushing to the next photo.`,
-        `This stop gives the journey its rhythm. Keep the ${pace} pace and let the city unfold naturally.`,
-        `End here with a wider view of the place. This is the part that turns the route into a memory.`
-      ];
+  const landmarkCoords = getLandmarkCoords(place, landmarks, center);
 
-      return templates[index % templates.length];
-    }
+  app.innerHTML = `
+    <section class="hero">
+      <div class="hero-left">
+        <div>
+          <div class="eyebrow">Your cinematic route</div>
+          <h1>${escapeText(place.city)}, ${escapeText(place.country)}</h1>
+          <p class="lead">${escapeText(place.story || "A route shaped around the feeling of this destination.")}</p>
 
-    function planText(place, type) {
-      const city = place.city;
-      const mood = place.mood || "emotional";
-      const pace = place.pace || "balanced";
-
-      if (type === "morning") {
-        return `Start with the calmest landmark first, while the streets are softer and ${city} is still waking up.`;
-      }
-
-      if (type === "afternoon") {
-        return `Move through the main sights when the energy rises. Keep it ${pace}, with time for food, views and small detours.`;
-      }
-
-      return `End with the most atmospheric stop. Let the ${mood} mood of ${city} carry the final part of the day.`;
-    }
-
-    function escapeText(value) {
-      return String(value || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function focusStop(index) {
-      const place = window.currentPlace;
-      const landmark = window.currentLandmarks[index];
-      const coords = window.currentCoords[index];
-      const panel = document.getElementById("mapPanel");
-
-      panel.innerHTML = `
-        <h3>${escapeText(landmark)}</h3>
-        <p>${escapeText(stopDescription(place, landmark, index))}</p>
-      `;
-
-      map.flyTo(coords, 15, { duration: 0.7 });
-
-      if (markers[index]) {
-        markers[index].openPopup();
-      }
-    }
-
-    function renderJourney(place) {
-      const landmarks = place.landmarks || [];
-
-      const center = validCoords(place.coordinates)
-        ? place.coordinates
-        : [48.8566, 2.3522];
-
-      const landmarkCoords = getLandmarkCoords(place, landmarks, center);
-
-      app.innerHTML = `
-        <section class="hero">
-          <div class="intro">
-            <div class="eyebrow">Your journey</div>
-            <h1>${escapeText(place.city)}, ${escapeText(place.country)}</h1>
-            <p class="lead">${escapeText(place.story || "A route shaped around the feeling of this destination.")}</p>
-
-            <div class="chips">
-              <span>${escapeText(place.mood || "mood")}</span>
-              <span>${escapeText(place.pace || "pace")}</span>
-              <span>${escapeText(place.climate || "climate")}</span>
-              <span>${escapeText(place.crowd || "crowd")}</span>
-              ${(place.tags || []).slice(0, 4).map(tag => `<span>${escapeText(tag)}</span>`).join("")}
-            </div>
-
-            <div class="actions">
-              <a class="btn primary" href="${escapeText(place.flightUrl)}" target="_blank" rel="noopener">Find flights</a>
-              <a class="btn soft" href="${escapeText(place.hotelUrl || "#")}" target="_blank" rel="noopener">Find hotels</a>
-            </div>
+          <div class="chips">
+            <span>${escapeText(place.mood || "mood")}</span>
+            <span>${escapeText(place.pace || "pace")}</span>
+            <span>${escapeText(place.climate || "climate")}</span>
+            <span>${escapeText(place.crowd || "crowd")}</span>
+            ${(place.tags || []).slice(0, 4).map(tag => `<span>${escapeText(tag)}</span>`).join("")}
           </div>
+        </div>
 
-          <div class="map-card">
-            <div id="map"></div>
-            <div class="map-panel" id="mapPanel">
-              <h3>Start your route</h3>
-              <p>Click a pin to reveal the landmark, feeling and suggested moment for this journey.</p>
-            </div>
-          </div>
-        </section>
+        <div class="mini-note">
+          This map is not just a route. Each pin is a moment where the city can match the feeling you searched for.
+        </div>
+      </div>
 
+      <div class="map-card">
+        <div id="map"></div>
+        <div class="map-panel" id="mapPanel">
+          <h3>Start your route</h3>
+          <p>Click a pin to reveal the feeling behind that stop.</p>
+        </div>
+      </div>
+    </section>
 
-        <section>
-          <div class="section-title">
-            <h2>Landmark stops</h2>
-            <p>Tap any stop to move the map and see the moment behind it.</p>
-          </div>
+    <section class="story-experience">
+      <div class="story-header">
+        <span class="story-kicker">Cinematic route</span>
+        <h2>Your feeling becomes a path.</h2>
+        <p>
+          FeelTrip turns your original mood into a small emotional route through the city.
+          Not a checklist — a scene you move through.
+        </p>
+      </div>
 
-          <div class="stops">
-            ${landmarks.map((landmark, index) => `
-              <article class="stop" onclick="focusStop(${index})">
-                <div class="stop-num">${index + 1}</div>
-                <div>
-                  <h3>${escapeText(landmark)}</h3>
-                  <p>${escapeText(stopDescription(place, landmark, index))}</p>
-                </div>
-              </article>
-            `).join("")}
-          </div>
+      <button class="story-button" id="storyButton" onclick="generateStory()">
+        Draw my journey through this story
+      </button>
 
-          <div class="actions">
-            <a class="btn danger" href="${escapeText(place.flightUrl)}" target="_blank" rel="noopener">Turn this into a trip</a>
-            <a class="btn soft" href="index.html">Back to recommendations</a>
-          </div>
-        </section>
-      `;
+      <div class="story-output" id="storyOutput" style="display:none;"></div>
 
-      window.currentPlace = place;
-      window.currentLandmarks = landmarks;
-      window.currentCoords = landmarkCoords;
+      <div class="actions">
+        <a class="btn danger" href="${escapeText(place.flightUrl)}" target="_blank" rel="noopener">Find flights</a>
+        <a class="btn soft" href="index.html">Back to recommendations</a>
+      </div>
+    </section>
+  `;
 
-      map = L.map("map").setView(center, 13);
+  window.currentPlace = place;
+  window.currentLandmarks = landmarks;
+  window.currentCoords = landmarkCoords;
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "&copy; OpenStreetMap"
-      }).addTo(map);
+  map = L.map("map").setView(center, 13);
 
-      markers = landmarks.map((landmark, index) => {
-        const marker = L.marker(landmarkCoords[index])
-          .addTo(map)
-          .bindPopup(`<strong>${escapeText(landmark)}</strong><br>${escapeText(place.city)}`);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "&copy; OpenStreetMap"
+  }).addTo(map);
 
-        marker.on("click", () => focusStop(index));
+  markers = landmarks.map((landmark, index) => {
+    const marker = L.marker(landmarkCoords[index])
+      .addTo(map)
+      .bindPopup(`<strong>${escapeText(landmark)}</strong><br>${escapeText(place.city)}`);
 
-        return marker;
-      });
+    marker.on("click", () => focusStop(index));
 
-      if (markers.length > 0) {
-        const group = L.featureGroup(markers);
-        map.fitBounds(group.getBounds().pad(0.25));
-      }
+    return marker;
+  });
+
+  if (markers.length > 0) {
+    const group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.25));
+  }
+}
+
+async function generateStory() {
+  const output = document.getElementById("storyOutput");
+  const button = document.getElementById("storyButton");
+  const place = window.currentPlace;
+  const userText = localStorage.getItem("feeltrip_user_input") || "";
+
+  output.style.display = "block";
+  output.textContent = "Drawing your cinematic route...";
+  button.disabled = true;
+
+  try {
+    const response = await fetch(`${API_BASE}/story`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        city: place.city,
+        user_text: userText
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      output.textContent = data.error;
+      button.disabled = false;
+      return;
     }
 
-    async function loadJourney() {
-      if (!placeName) {
-        app.innerHTML = "<p>No place selected.</p>";
-        return;
-      }
+    const storyText = data.story || "The story could not be created.";
 
-      const city = cityFromPlaceParam(placeName);
+    const parts = storyText
+      .split(/\n+/)
+      .filter(part => part.trim().length > 0)
+      .slice(0, 3);
 
-      try {
-        const response = await fetch(`${API_BASE}/journey/${encodeURIComponent(city)}`);
-        const place = await response.json();
+    output.innerHTML = `
+      <div class="story-route">
+        ${parts.map((part, index) => `
+          <div class="story-step" data-step="0${index + 1}">
+            ${escapeText(part)}
+          </div>
+        `).join("")}
 
-        if (place.error) {
-          app.innerHTML = `<p>${escapeText(place.error)}</p>`;
-          return;
-        }
+        <div class="story-destination">
+          🎬 You arrive inside the feeling.
+        </div>
+      </div>
+    `;
+  } catch (error) {
+    console.error(error);
+    output.textContent = "Could not generate the story. Check that Ollama and FastAPI are running.";
+  }
 
-        renderJourney(place);
-      } catch (error) {
-        console.error(error);
-        app.innerHTML = "<p>Could not load journey from backend. Check that FastAPI is running on port 8000.</p>";
-      }
+  button.disabled = false;
+}
+
+async function loadJourney() {
+  if (!placeName) {
+    app.innerHTML = "<p>No place selected.</p>";
+    return;
+  }
+
+  const city = cityFromPlaceParam(placeName);
+
+  try {
+    const response = await fetch(`${API_BASE}/journey/${encodeURIComponent(city)}`);
+    const place = await response.json();
+
+    if (place.error) {
+      app.innerHTML = `<p>${escapeText(place.error)}</p>`;
+      return;
     }
 
-    loadJourney();
-  </script>
+    renderJourney(place);
+  } catch (error) {
+    console.error(error);
+    app.innerHTML = "<p>Could not load journey from backend. Check that FastAPI is running on port 8000.</p>";
+  }
+}
+
+loadJourney();
+</script>
 </body>
 </html>
