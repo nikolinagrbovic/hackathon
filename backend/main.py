@@ -407,3 +407,122 @@ PLACES_PATH = Path("places.json")
 @app.get("/stories")
 def get_stories():
     return load_json(PLACES_PATH)
+
+
+# chat bot
+import requests
+
+MODEL = "llama3.2:3b"
+
+def ask_llama_json(prompt: str):
+    try:
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={
+                "model": MODEL,
+                "prompt": prompt,
+                "stream": False,
+                "format": "json",
+                "options": {"temperature": 0},
+            },
+            timeout=90,
+        )
+
+        response.raise_for_status()
+        raw = response.json().get("response", "{}")
+        print("LLAMA RAW:", raw)
+
+        return json.loads(raw)
+
+    except Exception as e:
+        print("LLAMA ERROR:", e)
+        return {}
+
+def ask_llama_text(prompt: str):
+    try:
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={
+                "model": MODEL,
+                "prompt": prompt,
+                "stream": False,
+                "options": {
+                    "temperature": 0.8
+                },
+            },
+            timeout=90,
+        )
+
+        response.raise_for_status()
+        return response.json().get("response", "").strip()
+
+    except Exception as e:
+        print("LLAMA STORY ERROR:", e)
+        return ""
+
+
+class StoryRequest(BaseModel):
+    city: str
+    user_text: str
+
+@app.post("/story")
+def generate_story(data: StoryRequest):
+    places = load_json(PLACES_PATH)
+
+    selected_place = None
+
+    for place in places:
+        if place["city"].lower().strip() == data.city.lower().strip():
+            selected_place = place
+            break
+
+    if not selected_place:
+        return {"error": "Place not found"}
+
+    prompt = f"""
+    You are FeelTrip, a cinematic travel storyteller.
+
+    User wants to feel:
+    {data.user_text}
+
+    Destination:
+    {selected_place["city"]}, {selected_place["country"]}
+
+    Mood:
+    {selected_place.get("mood")}
+
+    Sensory details:
+    {", ".join(selected_place.get("sensory", []))}
+
+    Landmarks:
+    {", ".join(selected_place.get("landmarks", [])[:4])}
+
+    Write a cinematic journey as a route.
+
+    Structure:
+    1. First, tell the user where to start.
+    2. Then tell them where to walk next.
+    3. Then tell them where to end.
+    4. Each step should feel emotional and atmospheric.
+
+    Style:
+    - second person
+    - use phrases like "Start at...", "Then walk toward...", "End near..."
+    - make it feel like the user is moving through a film scene
+    - naturally include 3 landmarks
+    - do NOT sound like a guidebook
+    - do NOT list facts
+    - focus on feeling, atmosphere, light, sound, movement and memory
+
+    Return 3 short paragraphs only.
+    """
+
+    story = ask_llama_text(prompt)
+
+    if not story:
+        story = f"You arrive in {selected_place['city']} with the feeling you described still in your head. The city does not explain itself immediately — it lets you move slowly, notice the air, the light, and the small details around you."
+
+    return {
+        "city": selected_place["city"],
+        "story": story
+    }
