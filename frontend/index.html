@@ -291,14 +291,19 @@
       margin-bottom: 16px;
     }
 
-    .quote {
-      color: var(--deep);
-      line-height: 1.45;
-      font-size: 22px;
-      letter-spacing: -0.5px;
-      margin: 0;
-      font-weight: 800;
-    }
+.quote {
+  color: var(--deep);
+  line-height: 1.4;
+  font-size: 18px;
+  letter-spacing: -0.25px;
+  margin: 0;
+  font-weight: 800;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
     .destination-body {
       padding: 16px;
@@ -586,179 +591,179 @@
     <div class="cards" id="cards"></div>
   </section>
 
-  <script>
-    const input = document.getElementById('dreamInput');
-    const button = document.getElementById('dreamButton');
-    const cards = document.getElementById('cards');
-    const results = document.getElementById('results');
+ <script>
+  const input = document.getElementById('dreamInput');
+  const button = document.getElementById('dreamButton');
+  const cards = document.getElementById('cards');
+  const results = document.getElementById('results');
 
-    const moods = {
-      nature: {
-        words: ['forest', 'mountain', 'nature', 'green', 'trees', 'lake', 'hiking', 'quiet', 'fresh'],
-        colors: ['#b8f1d3', '#d6fff0', '#ffffff']
-      },
-      ocean: {
-        words: ['sea', 'ocean', 'beach', 'waves', 'blue', 'island', 'swim', 'coast', 'air'],
-        colors: ['#9be7ff', '#c8f4ff', '#ffffff']
-      },
-      sun: {
-        words: ['sun', 'sunset', 'golden', 'warm', 'summer', 'light', 'yellow', 'morning'],
-        colors: ['#ffe27a', '#ffd1a3', '#ffffff']
-      },
-      romantic: {
-        words: ['romantic', 'love', 'slow', 'wine', 'old town', 'streets', 'soft', 'dream'],
-        colors: ['#ffb3c6', '#ffd9e6', '#ffffff']
+  const moods = {
+    nature: {
+      words: ['forest', 'mountain', 'nature', 'green', 'trees', 'lake', 'hiking', 'quiet', 'fresh'],
+      colors: ['#b8f1d3', '#d6fff0', '#ffffff']
+    },
+    ocean: {
+      words: ['sea', 'ocean', 'beach', 'waves', 'blue', 'island', 'swim', 'coast', 'air'],
+      colors: ['#9be7ff', '#c8f4ff', '#ffffff']
+    },
+    sun: {
+      words: ['sun', 'sunset', 'golden', 'warm', 'summer', 'light', 'yellow', 'morning'],
+      colors: ['#ffe27a', '#ffd1a3', '#ffffff']
+    },
+    romantic: {
+      words: ['romantic', 'love', 'slow', 'wine', 'old town', 'streets', 'soft', 'dream'],
+      colors: ['#ffb3c6', '#ffd9e6', '#ffffff']
+    }
+  };
+
+  function detectMood(text) {
+    const lower = text.toLowerCase();
+    let bestMood = moods.ocean;
+    let bestScore = 0;
+
+    Object.values(moods).forEach(mood => {
+      const score = mood.words.reduce((sum, word) => {
+        return lower.includes(word) ? sum + 1 : sum;
+      }, 0);
+
+      if (score > bestScore) {
+        bestMood = mood;
+        bestScore = score;
       }
-    };
+    });
 
-    function detectMood(text) {
-      const lower = text.toLowerCase();
-      let bestMood = moods.ocean;
-      let bestScore = 0;
-
-      Object.values(moods).forEach(mood => {
-        const score = mood.words.reduce((sum, word) => {
-          return lower.includes(word) ? sum + 1 : sum;
-        }, 0);
-
-        if (score > bestScore) {
-          bestMood = mood;
-          bestScore = score;
-        }
-      });
-
-      return bestMood;
-    }
-
-    function updateMoodBackground() {
-      const mood = detectMood(input.value);
-
-      document.body.style.setProperty('--mood-a', mood.colors[0]);
-      document.body.style.setProperty('--mood-b', mood.colors[1]);
-      document.body.style.setProperty('--mood-c', mood.colors[2]);
-    }
-
-async function showResults() {
-  updateMoodBackground();
-
-  const userText = input.value.trim();
-
-  if (!userText) {
-    cards.innerHTML = `<p>Please describe what you want to feel first.</p>`;
-    results.style.display = 'block';
-    return;
+    return bestMood;
   }
 
-  cards.innerHTML = `<p>Finding places that match your feeling...</p>`;
-  results.style.display = 'block';
+  function updateMoodBackground() {
+    const mood = detectMood(input.value);
 
-  console.log("Request sent to backend with text:", userText);
-  try {
-    const response = await fetch("http://127.0.0.1:8000/recommend", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        text: userText
-      })
-    });
- console.log("Request sent to backend with text:", userText);
+    document.body.style.setProperty('--mood-a', mood.colors[0]);
+    document.body.style.setProperty('--mood-b', mood.colors[1]);
+    document.body.style.setProperty('--mood-c', mood.colors[2]);
+  }
 
-    const data = await response.json();
+  async function showResults() {
+    updateMoodBackground();
 
-    const destinations = data.results || [];
+    const userText = input.value.trim();
 
-    if (destinations.length === 0) {
-      cards.innerHTML = `<p>No matching places found. Try describing another feeling.</p>`;
+    localStorage.setItem("feeltrip_user_input", userText);
+
+    if (!userText) {
+      cards.innerHTML = `<p>Please describe what you want to feel first.</p>`;
+      results.style.display = 'block';
       return;
     }
 
-    const visibleDestinations = destinations.slice(0, 6);
+    cards.innerHTML = `<p>Finding places that match your feeling...</p>`;
+    results.style.display = 'block';
 
-    cards.innerHTML = visibleDestinations.map((place, index) => `
-      <article class="destination-card" id="card-${index}">
-        <div class="card-inner">
+    console.log("Request sent to backend with text:", userText);
 
-          <div class="card-face card-front">
-            <div>
-              <div class="match">${place.match || "Feeling match"}</div>
-              <div class="story-title">Traveller feeling</div>
-              <p class="quote">“${place.story || ""}”</p>
-            </div>
+    try {
+      const response = await fetch("http://127.0.0.1:8000/recommend", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          text: userText
+        })
+      });
 
-            <div class="card-actions front-action">
-              <button class="card-link" onclick="flipCard(${index})">
-                Discover destination
-              </button>
-            </div>
-          </div>
+      const data = await response.json();
+      const destinations = data.results || [];
 
-          <div class="card-face card-back">
-            <div class="image-wrap">
-              <img src="${place.image}" alt="${place.name}">
-              <div class="image-overlay">
-                <h3>${place.name || "Unknown place"}</h3>
+      if (destinations.length === 0) {
+        cards.innerHTML = `<p>No matching places found. Try describing another feeling.</p>`;
+        return;
+      }
+
+      const visibleDestinations = destinations.slice(0, 6);
+
+      cards.innerHTML = visibleDestinations.map((place, index) => `
+        <article class="destination-card" id="card-${index}">
+          <div class="card-inner">
+
+            <div class="card-face card-front">
+              <div>
+                <div class="match">${place.match || "Feeling match"}</div>
+                <div class="story-title">Traveller feeling</div>
+                <p class="quote">“${place.story || ""}”</p>
               </div>
-            </div>
 
-            <div class="destination-body">
-              <div class="feelings">
-                ${(place.feelings || []).slice(0, 4).map(feeling => `<span>${feeling}</span>`).join('')}
-              </div>
-              
-                <div class="landmarks">
-  <strong>Landmarks</strong>
-  <p>${(place.landmarks || []).slice(0, 3).join(', ')}</p>
-</div>
-
-              <div class="card-actions back-actions">
-                <button class="ghost-button" onclick="flipCard(${index})">Back</button>
-
-                <button class="journey-button" onclick="openJourney('${encodeURIComponent(place.name || "Unknown place")}')">
-                  Journey
+              <div class="card-actions front-action">
+                <button class="card-link" onclick="flipCard(${index})">
+                  Discover destination
                 </button>
-
-                <a class="card-link" href="${place.flightUrl || "https://www.skyscanner.net"}" target="_blank" rel="noopener">
-                  Flights
-                </a>
               </div>
             </div>
+
+            <div class="card-face card-back">
+              <div class="image-wrap">
+                <img src="${place.image}" alt="${place.name}">
+                <div class="image-overlay">
+                  <h3>${place.name || "Unknown place"}</h3>
+                </div>
+              </div>
+
+              <div class="destination-body">
+                <div class="feelings">
+                  ${(place.matchedTags || []).slice(0, 4).map(feeling => `<span>${feeling}</span>`).join('')}
+                </div>
+
+                <div class="landmarks">
+                  <strong>Landmarks</strong>
+                  <p>${(place.landmarks || []).slice(0, 3).join(', ')}</p>
+                </div>
+
+                <div class="card-actions back-actions">
+                  <button class="ghost-button" onclick="flipCard(${index})">Back</button>
+
+                  <button class="journey-button" onclick="openJourney('${encodeURIComponent(place.name || "Unknown place")}')">
+                    Journey
+                  </button>
+
+                  <a class="card-link" href="${place.flightUrl || "https://www.skyscanner.net"}" target="_blank" rel="noopener">
+                    Flights
+                  </a>
+                </div>
+              </div>
+            </div>
+
           </div>
-
+        </article>
+      `).join('') + `
+        <div class="explore-more-wrap">
+          <h2 class="explore-more-title">Explore more than a destination.</h2>
+          <p class="explore-more-text">
+            Open more traveller stories, hidden moods and emotional routes that match the way you want your next trip to feel.
+          </p>
+          <a class="explore-more-button" href="stories.html">
+            Explore more stories →
+          </a>
         </div>
-      </article>
-    `).join('') + `
-      <div class="explore-more-wrap">
-        <h2 class="explore-more-title">Explore more than a destination.</h2>
-        <p class="explore-more-text">
-          Open more traveller stories, hidden moods and emotional routes that match the way you want your next trip to feel.
-        </p>
-        <a class="explore-more-button" href="stories.html">
-          Explore more stories →
-        </a>
-      </div>
-    `;
+      `;
 
-    results.scrollIntoView({ behavior: 'smooth' });
+      results.scrollIntoView({ behavior: 'smooth' });
 
-  } catch (error) {
-    cards.innerHTML = `<p>Could not get recommendations from backend.</p>`;
-    console.error(error);
+    } catch (error) {
+      cards.innerHTML = `<p>Could not get recommendations from backend.</p>`;
+      console.error(error);
+    }
   }
-}
 
-    function flipCard(index) {
-      document.getElementById(`card-${index}`).classList.toggle('is-flipped');
-    }
+  function flipCard(index) {
+    document.getElementById(`card-${index}`).classList.toggle('is-flipped');
+  }
 
-    function openJourney(encodedPlaceName) {
-      const placeName = decodeURIComponent(encodedPlaceName);
-      window.location.href = `journey.html?place=${encodeURIComponent(placeName)}`;
-    }
+  function openJourney(encodedPlaceName) {
+    const placeName = decodeURIComponent(encodedPlaceName);
+    window.location.href = `journey.html?place=${encodeURIComponent(placeName)}`;
+  }
 
-    input.addEventListener('input', updateMoodBackground);
-    button.addEventListener('click', showResults);
-  </script>
+  input.addEventListener('input', updateMoodBackground);
+</script>
 </body>
 </html>
